@@ -28,7 +28,6 @@
   a { color: var(--blue); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
-  /* ── Hero ── */
   .hero {
     max-width: 800px;
     margin: 0 auto;
@@ -93,7 +92,6 @@
   }
   .btn-secondary:hover { background: var(--surface); text-decoration: none; }
 
-  /* ── How it works ── */
   .section {
     max-width: 800px;
     margin: 0 auto;
@@ -129,7 +127,6 @@
   .how-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
   .how-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
-  /* ── Equation ── */
   .eq-block {
     background: #010409;
     border: 1px solid var(--border);
@@ -145,7 +142,6 @@
   .eq-main { font-size: 16px; color: #ffffff; }
   .eq-note { font-size: 11px; color: #6e7681; margin-top: 8px; }
 
-  /* ── Scenarios ── */
   .scenarios { display: flex; flex-direction: column; gap: 12px; }
   .scenario-card {
     background: var(--surface);
@@ -195,7 +191,6 @@
   .launch-btn.scene2 { background: #2d1a4a; color: #c9a8f5; border-color: #8b5cf650; }
   .launch-btn.scene2:hover { background: #3a2060; }
 
-  /* ── Footer ── */
   footer {
     border-top: 1px solid var(--border);
     text-align: center;
@@ -209,136 +204,130 @@
 </head>
 <body>
 
-<!-- ── Hero ── -->
 <div class="hero">
   <div class="hero-eyebrow">Interactive Simulation · Economics · Game Theory</div>
-  <h1>Why Does Seniority Always Win?</h1>
+  <h1>Why Does Seniority Tend to Persist?</h1>
   <p>
-    A mathematical model of workplace rank dynamics. Even when younger people are more capable,
-    organizations reliably re-sort back into age order — and this simulation shows exactly why.
+    A mathematical model of workplace rank dynamics. Seniority-based ordering is remarkably stable across organizations. This simulation lets you explore the forces that sustain it and the conditions under which merit-based ordering can take hold.
   </p>
   <div class="hero-actions">
     <a class="btn-primary" href="sim.html">Open Simulation</a>
-    <a class="btn-secondary" href="explainer.html">Read the Theory</a>
+    <a class="btn-secondary" href="explainer.html" target="_blank">Read the Theory</a>
   </div>
 </div>
 
-<!-- ── How it works ── -->
 <div class="section">
   <div class="section-label">How it works</div>
   <p style="color:var(--muted); margin-bottom:20px; font-size:14px;">
-    Each dot is an employee. Their horizontal position is fixed by <strong style="color:var(--text)">tenure</strong> (how long they've been around).
-    Their vertical position is <strong style="color:var(--text)">rank</strong> — the only thing that moves.
+    Each dot is an employee. Their horizontal position is fixed by <strong style="color:var(--text)">tenure</strong> (how long they have been at the organization).
+    Their vertical position is <strong style="color:var(--text)">rank</strong>, which evolves over time.
     Color shows <strong style="color:var(--text)">competence</strong> (blue = lower, red = higher).
-    When the dots line up along the diagonal, rank perfectly matches tenure: the senior person is on top.
+    When the dots align along the diagonal, rank perfectly matches tenure: seniority order is preserved.
   </p>
   <p style="color:var(--muted); margin-bottom:20px; font-size:14px;">
-    Three forces tug on each dot's rank every frame:
+    Three forces act on each dot's rank every frame:
   </p>
   <div class="how-grid">
     <div class="how-card">
       <div class="how-sym" style="color:#58a6ff">α · merit</div>
       <div class="how-name">Meritocratic drift</div>
-      <div class="how-desc">Pulls your rank toward your competence level. Small in most real organizations.</div>
+      <div class="how-desc">Pulls rank toward competence level. Recognizing and rewarding performance takes time, so this force is often modest.</div>
     </div>
     <div class="how-card">
       <div class="how-sym" style="color:#3fb950">β · seniority</div>
       <div class="how-name">Seniority spring</div>
-      <div class="how-desc">Pulls rank back to what your tenure predicts — like a spring. Captures deferred pay contracts and fairness norms.</div>
+      <div class="how-desc">Pulls rank back toward what tenure predicts. Captures deferred pay structures, fairness norms, and the stability of long-term employment contracts.</div>
     </div>
     <div class="how-card">
-      <div class="how-sym" style="color:#f78166">γ · holdup</div>
-      <div class="how-name">Insider holdup</div>
-      <div class="how-desc">Pushes juniors back down when they outrank a senior. Captures the "hostage" power of institutional knowledge.</div>
+      <div class="how-sym" style="color:#f78166">γ · experience</div>
+      <div class="how-name">Experience advantage</div>
+      <div class="how-desc">Reflects the weight of institutional knowledge. When tenure order is disrupted, the cost of transferring accumulated context creates a gravitational pull toward restoring it.</div>
     </div>
   </div>
   <div class="eq-block">
     <div class="eq-main">drᵢ = [ α(cᵢ − c̄) &nbsp;−&nbsp; β(rᵢ − sᵢ) &nbsp;−&nbsp; γHᵢ ] dt &nbsp;+&nbsp; σ dWᵢ</div>
     <div class="eq-note">
       sᵢ = rank predicted by tenure alone &nbsp;·&nbsp;
-      Hᵢ = holdup pressure from displaced seniors &nbsp;·&nbsp;
-      σ dWᵢ = noise (politics, luck)
+      Hᵢ = experience-weighted pressure from tenure-order inversions &nbsp;·&nbsp;
+      σ dWᵢ = random shocks (project outcomes, organizational change)
     </div>
   </div>
   <p style="font-size:13px; color:var(--muted); margin-top:12px;">
     The key ratio is <strong style="color:var(--text); font-family:monospace">α/β</strong>.
-    Below ~0.5 → seniority wins. Above ~2 → meritocracy. Most real organizations sit around 0.1–0.3.
-    <a href="explainer.html">Full theory →</a>
+    Below roughly 0.5, seniority prevails. Above roughly 2, merit-based ordering takes hold. Most organizations fall between 0.1 and 0.3.
+    <a href="explainer.html" target="_blank">Full theory →</a>
   </p>
 </div>
 
-<!-- ── Scenarios ── -->
 <div class="section">
   <div class="section-label">5 Scenarios to explore</div>
   <p style="color:var(--muted); margin-bottom:20px; font-size:14px;">
-    Each opens the simulation pre-configured and fires a mutiny after 1 second so you can immediately watch the dynamics.
-    Use the sliders to explore from there.
+    Each opens the simulation pre-configured and applies a sudden rank reshuffle after one second so you can immediately observe the dynamics. Use the sliders to explore further.
   </p>
   <div class="scenarios">
 
     <div class="scenario-card">
       <div class="scenario-num">01</div>
       <div class="scenario-body">
-        <div class="scenario-title">Seniority dominates</div>
+        <div class="scenario-title">Seniority prevails</div>
         <div class="scenario-params">α = 0.30 · β = 1.50 · γ = 0.50</div>
-        <div class="scenario-desc">The baseline — a normal organization. The seniority spring is strong and competence barely matters.</div>
-        <div class="scenario-watch">→ After mutiny, watch the blue line crash and then fully recover. The cloud snaps back to the diagonal.</div>
+        <div class="scenario-desc">The baseline. A typical organization with strong tenure norms. The seniority spring is robust and competence plays a secondary role in determining rank.</div>
+        <div class="scenario-watch">Watch: after the reshuffle, the blue line drops then climbs back. The dot cloud returns to the diagonal.</div>
       </div>
-      <a class="launch-btn" href="sim.html?alpha=0.3&beta=1.5&gamma=0.5&sigma=0.06&speed=0.7&label=Seniority+dominates&mutiny=1" target="_blank">Launch ↗</a>
+      <a class="launch-btn" href="sim.html?alpha=0.3&beta=1.5&gamma=0.5&sigma=0.06&speed=0.7&label=Seniority+prevails&mutiny=1" target="_blank">Launch ↗</a>
     </div>
 
     <div class="scenario-card">
       <div class="scenario-num">02</div>
       <div class="scenario-body">
-        <div class="scenario-title">Meritocracy</div>
+        <div class="scenario-title">Merit-based ordering</div>
         <div class="scenario-params">α = 1.80 · β = 0.30 · γ ≈ 0</div>
-        <div class="scenario-desc">Merit dominates. Rank tracks competence, not age. The seniority spring is nearly absent.</div>
-        <div class="scenario-watch">→ Watch dots self-sort by color over time: red (competent) rises to the top, blue sinks. The orange line stays high.</div>
+        <div class="scenario-desc">Competence is the primary driver of rank. The seniority spring is weak and tenure plays a smaller role. This regime requires strong and consistent performance feedback structures.</div>
+        <div class="scenario-watch">Watch: dots gradually sort by color. Higher-competence dots (warmer colors) rise; lower-competence dots settle lower. The orange line stays elevated.</div>
       </div>
-      <a class="launch-btn" href="sim.html?alpha=1.8&beta=0.3&gamma=0.05&sigma=0.06&speed=0.7&label=Meritocracy" target="_blank">Launch ↗</a>
+      <a class="launch-btn" href="sim.html?alpha=1.8&beta=0.3&gamma=0.05&sigma=0.06&speed=0.7&label=Merit-based+ordering" target="_blank">Launch ↗</a>
     </div>
 
     <div class="scenario-card">
       <div class="scenario-num">03</div>
       <div class="scenario-body">
-        <div class="scenario-title">Holdup fortress</div>
+        <div class="scenario-title">Strong experience advantage</div>
         <div class="scenario-params">α = 0.20 · β = 0.20 · γ = 2.0</div>
-        <div class="scenario-desc">The seniority spring (β) is weak, but seniors grip hard via holdup (γ). Recovery after disruption is driven entirely by institutional-knowledge leverage, not norms.</div>
-        <div class="scenario-watch">→ Recovery is slower and lumpier than Scenario 1, but seniority still wins.</div>
+        <div class="scenario-desc">The formal seniority norm (β) is weak, but institutional knowledge carries substantial weight (γ). Recovery after a disruption is sustained by the value of accumulated context rather than by explicit policy.</div>
+        <div class="scenario-watch">Watch: recovery is slower and less uniform than Scenario 1, but the seniority ordering is still restored.</div>
       </div>
-      <a class="launch-btn" href="sim.html?alpha=0.2&beta=0.2&gamma=2.0&sigma=0.04&speed=0.5&label=Holdup+fortress&mutiny=1" target="_blank">Launch ↗</a>
+      <a class="launch-btn" href="sim.html?alpha=0.2&beta=0.2&gamma=2.0&sigma=0.04&speed=0.5&label=Strong+experience+advantage&mutiny=1" target="_blank">Launch ↗</a>
     </div>
 
     <div class="scenario-card">
       <div class="scenario-num">04</div>
       <div class="scenario-body">
-        <div class="scenario-title">Phase boundary</div>
+        <div class="scenario-title">Competing forces</div>
         <div class="scenario-params">α = 1.0 · β = 1.0 · γ = 0.20</div>
-        <div class="scenario-desc">Merit and seniority forces are exactly balanced. The system sits at the critical transition between two attractors.</div>
-        <div class="scenario-watch">→ After mutiny, the cloud settles loosely — neither the diagonal nor competence-sorting fully wins. Both τ values hover around 0.5.</div>
+        <div class="scenario-desc">Merit and seniority forces are in rough balance. The system sits near the transition between two stable states, making it sensitive to context and leadership.</div>
+        <div class="scenario-watch">Watch: after the reshuffle, the dot cloud settles loosely. Neither the diagonal nor competence-sorting fully takes hold. Both correlation lines hover near the middle.</div>
       </div>
-      <a class="launch-btn" href="sim.html?alpha=1.0&beta=1.0&gamma=0.2&sigma=0.06&speed=0.7&label=Phase+boundary&mutiny=1" target="_blank">Launch ↗</a>
+      <a class="launch-btn" href="sim.html?alpha=1.0&beta=1.0&gamma=0.2&sigma=0.06&speed=0.7&label=Competing+forces&mutiny=1" target="_blank">Launch ↗</a>
     </div>
 
     <div class="scenario-card">
       <div class="scenario-num">05</div>
       <div class="scenario-body">
-        <div class="scenario-title">Replicator dynamics</div>
+        <div class="scenario-title">Adaptive knowledge dynamics</div>
         <div class="scenario-params">Scene 2 · α = 0.30 · β = 0.80 · γ = 1.50</div>
-        <div class="scenario-desc">Seniors now <em>adapt</em> their hoarding strategy in response to threats. Gold rings show each senior's knowledge-hoarding intensity in real time.</div>
-        <div class="scenario-watch">→ After mutiny, gold rings bloom on threatened seniors. As order restores, the rings fade. The equilibrium defends itself.</div>
+        <div class="scenario-desc">Long-tenured employees now adapt their knowledge-sharing behavior in response to rank disruptions. Gold rings show each senior's knowledge concentration intensity in real time.</div>
+        <div class="scenario-watch">Watch: after the reshuffle, gold rings intensify on senior dots. As rank order is restored, the rings fade. The equilibrium partly sustains itself through behavior.</div>
       </div>
-      <a class="launch-btn scene2" href="sim.html?alpha=0.3&beta=0.8&gamma=1.5&sigma=0.04&speed=0.6&scene=2&label=Replicator+dynamics&mutiny=1" target="_blank">Launch ↗</a>
+      <a class="launch-btn scene2" href="sim.html?alpha=0.3&beta=0.8&gamma=1.5&sigma=0.04&speed=0.6&scene=2&label=Adaptive+knowledge+dynamics&mutiny=1" target="_blank">Launch ↗</a>
     </div>
 
   </div>
 </div>
 
-<!-- ── Footer ── -->
 <footer>
   <p>
     Built on: Lazear (1979) · Lazear &amp; Rosen (1981) · Lindbeck &amp; Snower (1984) · Akerlof &amp; Yellen (1990) · Pluchino et al. (2010) · Kuran (1989)
-    &nbsp;·&nbsp; <a href="MODEL.md">Model details</a> &nbsp;·&nbsp; <a href="explainer.html">Theory explainer</a>
+    &nbsp;·&nbsp; <a href="MODEL.md">Model details</a> &nbsp;·&nbsp; <a href="explainer.html" target="_blank">Theory explainer</a>
   </p>
 </footer>
 
