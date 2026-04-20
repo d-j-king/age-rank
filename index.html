@@ -15,7 +15,7 @@
     --surface: #161b22;
     --border: #21262d;
     --text: #c9d1d9;
-    --muted: #9aabb8;
+    --muted: #d0dbe4;
     --blue: #58a6ff;
     --blue-dim: #1c3057;
     --green: #3fb950;
@@ -157,7 +157,7 @@
   }
   .eq-main { font-size: 16px; color: #ffffff; }
   .eq-main .katex-display { margin: 0; }
-  .eq-note { font-size: 11px; color: #9aabb8; margin-top: 10px; }
+  .eq-note { font-size: 11px; color: #d0dbe4; margin-top: 10px; }
 
   .scenarios { display: flex; flex-direction: column; gap: 12px; }
   .scenario-card {
@@ -180,12 +180,11 @@
   .scenario-body { flex: 1; }
   .scenario-title { font-weight: 700; font-size: 15px; margin-bottom: 3px; color: #f0f6fc; }
   .scenario-params {
-    font-family: 'SF Mono', monospace;
     font-size: 11px;
     color: var(--muted);
     margin-bottom: 5px;
   }
-  .scenario-desc { font-size: 13px; color: #aab4be; line-height: 1.5; }
+  .scenario-desc { font-size: 13px; color: #d0dbe4; line-height: 1.5; }
   .scenario-watch {
     font-size: 12px;
     color: var(--green);
@@ -290,7 +289,7 @@
       <div class="scenario-num">01</div>
       <div class="scenario-body">
         <div class="scenario-title">Seniority prevails</div>
-        <div class="scenario-params">α = 0.30 · β = 1.50 · γ = 0.50</div>
+        <div class="scenario-params">$\alpha = 0.30 \;\cdot\; \beta = 1.50 \;\cdot\; \gamma = 0.50$</div>
         <div class="scenario-desc">The baseline. A typical organization with strong tenure norms. The seniority spring is robust and competence plays a secondary role in determining rank.</div>
         <div class="scenario-watch">Watch: after the reshuffle, the blue line drops then climbs back. The dot cloud returns to the diagonal.</div>
       </div>
@@ -301,7 +300,7 @@
       <div class="scenario-num">02</div>
       <div class="scenario-body">
         <div class="scenario-title">Merit-based ordering</div>
-        <div class="scenario-params">α = 1.80 · β = 0.30 · γ ≈ 0</div>
+        <div class="scenario-params">$\alpha = 1.80 \;\cdot\; \beta = 0.30 \;\cdot\; \gamma \approx 0$</div>
         <div class="scenario-desc">Competence is the primary driver of rank. The seniority spring is weak and tenure plays a smaller role. This regime requires strong and consistent performance feedback structures.</div>
         <div class="scenario-watch">Watch: dots gradually sort by color. Higher-competence dots (warmer colors) rise; lower-competence dots settle lower. The orange line stays elevated.</div>
       </div>
@@ -312,7 +311,7 @@
       <div class="scenario-num">03</div>
       <div class="scenario-body">
         <div class="scenario-title">Strong experience advantage</div>
-        <div class="scenario-params">α = 0.20 · β = 0.20 · γ = 2.0</div>
+        <div class="scenario-params">$\alpha = 0.20 \;\cdot\; \beta = 0.20 \;\cdot\; \gamma = 2.0$</div>
         <div class="scenario-desc">The formal seniority norm (β) is weak, but institutional knowledge carries substantial weight (γ). Recovery after a disruption is sustained by the value of accumulated context rather than by explicit policy.</div>
         <div class="scenario-watch">Watch: recovery is slower and less uniform than Scenario 1, but the seniority ordering is still restored.</div>
       </div>
@@ -323,7 +322,7 @@
       <div class="scenario-num">04</div>
       <div class="scenario-body">
         <div class="scenario-title">Competing forces</div>
-        <div class="scenario-params">α = 1.0 · β = 1.0 · γ = 0.20</div>
+        <div class="scenario-params">$\alpha = 1.0 \;\cdot\; \beta = 1.0 \;\cdot\; \gamma = 0.20$</div>
         <div class="scenario-desc">Merit and seniority forces are nominally equal, yet seniority still prevails. The seniority target spans the full rank range while competence variation is narrower, so the structural weight of tenure wins even at α = β. Recovery is slower and noisier than Scenario 1, and individual dot trajectories are more varied.</div>
         <div class="scenario-watch">Watch: after the reshuffle, τ(rank, tenure) recovers, but more slowly and to a lower ceiling than Scenario 1. Competence plays a detectable but secondary role — dots don't cleanly sort by color, but the variance around the diagonal is visibly higher than in the seniority-dominant case.</div>
       </div>
@@ -334,7 +333,7 @@
       <div class="scenario-num">05</div>
       <div class="scenario-body">
         <div class="scenario-title">Adaptive knowledge dynamics</div>
-        <div class="scenario-params">Scene 2 · α = 0.30 · β = 0.80 · γ = 1.50</div>
+        <div class="scenario-params">Scene 2 $\;\cdot\; \alpha = 0.30 \;\cdot\; \beta = 0.80 \;\cdot\; \gamma = 1.50$</div>
         <div class="scenario-desc">Long-tenured employees now adapt their knowledge-sharing behavior in response to rank disruptions. Gold rings show each senior's knowledge concentration intensity in real time.</div>
         <div class="scenario-watch">Watch: after the reshuffle, gold rings intensify on senior dots. As rank order is restored, the rings fade. The equilibrium partly sustains itself through behavior.</div>
       </div>
