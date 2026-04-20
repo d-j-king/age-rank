@@ -48,6 +48,9 @@ function applyUrlParams() {
   if (p.has('sigma')) set('sigma-slider', 'val-sigma', p.get('sigma'), v => v.toFixed(2));
   if (p.has('speed')) set('speed-slider', 'val-speed', p.get('speed'), v => v.toFixed(2) + '×');
   if (p.has('n'))     set('n-slider',     'val-n',     p.get('n'),     v => String(Math.round(v)));
+  if (p.has('drift'))  set('drift-slider',  'val-drift',  p.get('drift'),  v => v.toFixed(2));
+  if (p.has('lambda')) set('lambda-slider', 'val-lambda', p.get('lambda'), v => v.toFixed(2));
+  if (p.has('eta'))    set('eta-slider',    'val-eta',    p.get('eta'),    v => v.toFixed(2));
   if (p.has('scene')) setScene(parseInt(p.get('scene')));
   if (p.has('label')) pageLabel = p.get('label');
   if (p.has('mutiny')) setTimeout(() => reshuffleMutiny(), 1200);
@@ -112,10 +115,11 @@ function initAgents() {
       hoard: 0.2,
     });
   }
-  // Start r near the seniority-ordered equilibrium
+  // Start r near the seniority-ordered equilibrium; assign cohort by tenure quartile
   const byTau = [...agents].sort((a, b) => a.tau - b.tau);
   byTau.forEach((a, i) => {
     a.r = (i / (agents.length - 1)) * 2 - 1 + randomGaussian(0, 0.07);
+    a.cohort = Math.min(3, Math.floor(i / agents.length * 4));
   });
   history = [];
   mutinyMarkers = [];
@@ -142,6 +146,36 @@ function stepAgents() {
   const medianTau = byTau[floor(N / 2)].tau;
   const cMean = agents.reduce((s, a) => s + a.c, 0) / N;
 
+  // Scene 3: cohort solidarity + dynamic leadership beta
+  let betaActive = beta;
+  let cohortMeans = null;
+  let lambdaS3 = 0;
+  if (currentScene === 3) {
+    lambdaS3 = getParam('lambda-slider');
+    const eta = getParam('eta-slider');
+
+    // Cohort mean ranks
+    const sums = new Float32Array(4);
+    const counts = new Int32Array(4);
+    for (let i = 0; i < N; i++) {
+      sums[agents[i].cohort] += agents[i].r;
+      counts[agents[i].cohort]++;
+    }
+    cohortMeans = Array.from(sums, (s, g) => counts[g] > 0 ? s / counts[g] : 0);
+
+    // Leader = agent with highest current rank; their tenure percentile modulates beta
+    let leaderIdx = 0;
+    for (let i = 1; i < N; i++) {
+      if (agents[i].r > agents[leaderIdx].r) leaderIdx = i;
+    }
+    const leaderTauPctile = (sMap.get(agents[leaderIdx]) + 1) / 2;
+    // eta=0 → no modulation; eta=1 → oldest leader gives 1.5×beta, youngest 0.5×beta
+    betaActive = Math.max(0.05, beta * (1 + (leaderTauPctile - 0.5) * eta));
+
+    document.getElementById('stat-leader').textContent = leaderTauPctile.toFixed(2);
+    document.getElementById('stat-betaeff').textContent = betaActive.toFixed(3);
+  }
+
   const dr = new Float32Array(N);
   const dh = new Float32Array(N);
 
@@ -162,10 +196,14 @@ function stepAgents() {
     }
     holdup /= max(N - 1, 1);
 
+    const cohortPull = (currentScene === 3 && cohortMeans)
+      ? lambdaS3 * (cohortMeans[a.cohort] - a.r) : 0;
+
     dr[i] = (
-      alpha  * (a.c - cMean)
-      - beta   * (a.r - si)
-      - gammaEff * holdup
+      alpha      * (a.c - cMean)
+      - betaActive * (a.r - si)
+      - gammaEff   * holdup
+      + cohortPull
     ) * dt + sigma * sqrt(dt) * randomGaussian();
 
     // Replicator dynamics (scene 2 only)
@@ -187,6 +225,16 @@ function stepAgents() {
     agents[i].r += dr[i];
     if (currentScene === 2) {
       agents[i].hoard = constrain(agents[i].hoard + dh[i], 0, 1);
+    }
+  }
+
+  // Competence drift: OU process keeps distribution from piling at boundaries
+  const nu = getParam('drift-slider');
+  if (nu > 0) {
+    const meanRev = 0.05;
+    for (let i = 0; i < N; i++) {
+      const dc = -meanRev * (agents[i].c - 0.5) * dt + nu * sqrt(dt) * randomGaussian();
+      agents[i].c = constrain(agents[i].c + dc, 0.04, 0.96);
     }
   }
 }
@@ -252,7 +300,9 @@ function drawScatter() {
   textSize(11);
   fill(139, 148, 158);
   textStyle(BOLD);
-  const sceneTag = currentScene === 1 ? 'Scene 1: Kinematic SDE' : 'Scene 2: Replicator';
+  const sceneTag = currentScene === 1 ? 'Scene 1: Kinematic SDE'
+                 : currentScene === 2 ? 'Scene 2: Replicator'
+                 : 'Scene 3: Coalitions';
   const titleStr = pageLabel ? `${pageLabel}` : sceneTag;
   text(titleStr, sx + 10, sy + 9);
   textStyle(NORMAL);
@@ -284,6 +334,20 @@ function drawScatter() {
   const tP = tauPctiles();
   const cP = compPctiles();
 
+  // Cohort rings (scene 3) — colored by generation, drawn before dots
+  if (currentScene === 3) {
+    const COHORT_COLS = [[0,200,255],[80,220,80],[255,175,0],[180,80,255]];
+    noFill();
+    strokeWeight(1.8);
+    for (let i = 0; i < agents.length; i++) {
+      const col = COHORT_COLS[agents[i].cohort];
+      stroke(col[0], col[1], col[2], 130);
+      const px = sx + tP[i] * sw;
+      const py = sy + (1 - rP[i]) * sh;
+      ellipse(px, py, 22, 22);
+    }
+  }
+
   // Hoard rings (scene 2) — draw first so dots appear on top
   if (currentScene === 2) {
     noFill();
@@ -308,6 +372,45 @@ function drawScatter() {
     ellipse(px, py, 13, 13);
   }
   colorMode(RGB, 255);
+
+  // Leader highlight + cohort legend (scene 3)
+  if (currentScene === 3) {
+    const COHORT_COLS = [[0,200,255],[80,220,80],[255,175,0],[180,80,255]];
+
+    // Leader: highest rank percentile
+    let leaderI = 0;
+    for (let i = 1; i < agents.length; i++) {
+      if (rP[i] > rP[leaderI]) leaderI = i;
+    }
+    const lpx = sx + tP[leaderI] * sw;
+    const lpy = sy + (1 - rP[leaderI]) * sh;
+    noFill();
+    stroke(255, 255, 255, 210);
+    strokeWeight(2.5);
+    ellipse(lpx, lpy, 25, 25);
+    noStroke();
+    fill(255, 255, 200, 230);
+    textAlign(CENTER, BOTTOM);
+    textSize(11);
+    text('★', lpx, lpy - 10);
+
+    // Cohort legend — bottom-left of scatter panel
+    let lx = sx + 10;
+    const ly = sy + sh - 16;
+    noStroke();
+    textSize(9);
+    textAlign(LEFT, CENTER);
+    for (let g = 0; g < 4; g++) {
+      const col = COHORT_COLS[g];
+      fill(col[0], col[1], col[2], 180);
+      ellipse(lx + 4, ly, 8, 8);
+      fill(99, 119, 139);
+      text('gen ' + g, lx + 11, ly);
+      lx += 46;
+    }
+    fill(255, 255, 200, 180);
+    text('★ leader', lx + 4, ly);
+  }
 
   // Mutiny flash overlay
   if (mutinyFlash > 0) {
@@ -426,9 +529,14 @@ function setScene(n) {
   currentScene = n;
   document.getElementById('btn-scene1').classList.toggle('active', n === 1);
   document.getElementById('btn-scene2').classList.toggle('active', n === 2);
+  document.getElementById('btn-scene3').classList.toggle('active', n === 3);
   if (n === 2) {
     agents.forEach(a => { a.hoard = 0.2; });
   }
+  const s3 = n === 3;
+  document.getElementById('scene3-sliders').style.display = s3 ? 'flex' : 'none';
+  document.getElementById('stat-leader-row').style.display = s3 ? 'flex' : 'none';
+  document.getElementById('stat-betaeff-row').style.display = s3 ? 'flex' : 'none';
 }
 
 function togglePause() {

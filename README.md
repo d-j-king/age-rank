@@ -2,6 +2,8 @@
 
 **[→ Live demo](https://d-j-king.github.io/seniority-dynamics/)**
 
+<video src="demo.mp4" width="100%" controls autoplay loop muted></video>
+
 An interactive simulation of workplace rank dynamics, grounded in economic theory. Even when younger people are more capable, organizations tend to re-sort back into age order — this simulation lets you see exactly why, and find the conditions where merit can compete.
 
 ## What you're looking at

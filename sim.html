@@ -186,6 +186,7 @@
     <div class="scene-row">
       <button class="scene-btn active" id="btn-scene1" onclick="setScene(1)">Kinematic</button>
       <button class="scene-btn" id="btn-scene2" onclick="setScene(2)">Replicator</button>
+      <button class="scene-btn" id="btn-scene3" onclick="setScene(3)">Coalitions</button>
     </div>
   </div>
 
@@ -234,11 +235,38 @@
       </div>
       <div class="slider-item">
         <div class="slider-header">
+          <span class="slider-name">Comp. drift<span class="slider-sym">ν</span></span>
+          <span class="slider-val" id="val-drift">0.00</span>
+        </div>
+        <input type="range" id="drift-slider" min="0" max="0.1" value="0" step="0.005"
+          oninput="updateLabel('drift', this.value)">
+      </div>
+      <div class="slider-item">
+        <div class="slider-header">
           <span class="slider-name">Speed<span class="slider-sym">×</span></span>
           <span class="slider-val" id="val-speed">1.0×</span>
         </div>
         <input type="range" id="speed-slider" min="0.05" max="3" value="1" step="0.05"
           oninput="updateSpeedLabel(this.value)">
+      </div>
+    </div>
+    <!-- Scene 3 sliders — visible only when Coalitions scene is active -->
+    <div id="scene3-sliders" style="display:none; flex-direction:column; gap:11px; margin-top:6px; padding-top:8px; border-top:1px solid #21262d;">
+      <div class="slider-item">
+        <div class="slider-header">
+          <span class="slider-name">Cohort pull<span class="slider-sym">λ</span></span>
+          <span class="slider-val" id="val-lambda">0.80</span>
+        </div>
+        <input type="range" id="lambda-slider" min="0" max="2" value="0.8" step="0.05"
+          oninput="updateLabel('lambda', this.value)">
+      </div>
+      <div class="slider-item">
+        <div class="slider-header">
+          <span class="slider-name">Leader effect<span class="slider-sym">η</span></span>
+          <span class="slider-val" id="val-eta">1.00</span>
+        </div>
+        <input type="range" id="eta-slider" min="0" max="2" value="1.0" step="0.05"
+          oninput="updateLabel('eta', this.value)">
       </div>
     </div>
   </div>
@@ -272,6 +300,14 @@
         <span class="stat-label orange">τ(rank, competence)</span>
         <span class="stat-value orange" id="stat-rc">—</span>
       </div>
+      <div class="stat-row" id="stat-leader-row" style="display:none">
+        <span class="stat-label" style="color:#a78bfa">leader τ%ile</span>
+        <span class="stat-value" style="color:#a78bfa" id="stat-leader">—</span>
+      </div>
+      <div class="stat-row" id="stat-betaeff-row" style="display:none">
+        <span class="stat-label" style="color:#fbbf24">eff. β</span>
+        <span class="stat-value" style="color:#fbbf24" id="stat-betaeff">—</span>
+      </div>
     </div>
   </div>
 
@@ -279,7 +315,9 @@
     High β → seniority dominates.<br>
     High α → merit competes.<br>
     High γ → seniors hold tight.<br>
+    High ν → competence drifts (no settling).<br>
     Scene 2 → hoarding adapts.<br>
+    Scene 3 → coalitions + leader β.<br>
     Hit ⚡ Mutiny to perturb.
   </div>
 
