@@ -24,10 +24,10 @@
       min-width: 216px;
       background: #161b22;
       border-right: 1px solid #21262d;
-      padding: 16px 14px;
+      padding: 13px 14px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 14px;
       overflow-y: auto;
     }
 
@@ -170,6 +170,43 @@
 
     /* Canvas container */
     #canvas-container { flex: 1; overflow: hidden; }
+
+    /* Cohort bars (scene 3) */
+    .cohort-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 5px;
+    }
+    .cohort-row:last-child { margin-bottom: 0; }
+    .cohort-label {
+      font-size: 9.5px;
+      width: 30px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      transition: color 0.2s;
+    }
+    .cohort-track {
+      flex: 1;
+      height: 7px;
+      background: #1e242c;
+      border-radius: 3px;
+      position: relative;
+      overflow: visible;
+    }
+    .cohort-fill {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      border-radius: 3px;
+      transition: width 0.15s linear, background-color 0.2s, opacity 0.2s;
+    }
+    .cohort-tick {
+      position: absolute;
+      top: -2px; bottom: -2px;
+      width: 2px;
+      background: #ffffff;
+      transition: left 0.15s linear, opacity 0.2s;
+      border-radius: 1px;
+    }
   </style>
 </head>
 <body>
@@ -178,7 +215,14 @@
 
   <div>
     <div class="logo">Seniority Dynamics</div>
-    <div class="logo-sub">SDE model of workplace rank. x = tenure percentile, y = rank percentile. Dashed = perfect seniority.</div>
+    <div style="font-size:11px; color:#e2eaf0; font-weight:600; margin-top:4px; line-height:1.4;">
+      Why workplace rank tracks age.
+    </div>
+    <div style="margin-top:7px; font-size:10px; color:#b8c6d2; line-height:1.7;">
+      <div><b style="color:#e2eaf0">x</b> = age</div>
+      <div><b style="color:#e2eaf0">y</b> = rank</div>
+      <div><b style="color:#e2eaf0">color</b> = competence <span style="color:#8b949e">(blue &lt; mean &lt; red)</span></div>
+    </div>
   </div>
 
   <div>
@@ -235,14 +279,6 @@
       </div>
       <div class="slider-item">
         <div class="slider-header">
-          <span class="slider-name">Comp. drift<span class="slider-sym">ν</span></span>
-          <span class="slider-val" id="val-drift">0.00</span>
-        </div>
-        <input type="range" id="drift-slider" min="0" max="0.1" value="0" step="0.005"
-          oninput="updateLabel('drift', this.value)">
-      </div>
-      <div class="slider-item">
-        <div class="slider-header">
           <span class="slider-name">Speed<span class="slider-sym">×</span></span>
           <span class="slider-val" id="val-speed">1.0×</span>
         </div>
@@ -284,8 +320,38 @@
         <span class="btn-icon">⚡</span> Mutiny — merit
       </button>
       <button class="btn" onclick="resetSim()">
-        <span class="btn-icon">↺</span> Reset
+        <span class="btn-icon">↺</span> Reset (seniority-ordered)
       </button>
+      <button class="btn" onclick="resetSimRandom()">
+        <span class="btn-icon">⇆</span> Start random
+      </button>
+    </div>
+  </div>
+
+  <div id="coalitions-panel" style="display:none;">
+    <div class="section-label">Coalitions</div>
+    <div style="font-size:10px; color:#b8c6d2; line-height:1.55; margin-bottom:8px;">
+      <div><b style="color:#e2eaf0">Bar</b> = cohort mean rank</div>
+      <div><b style="color:#e2eaf0">Tick</b> = cohort top member</div>
+      <div style="margin-top:5px;"><b style="color:#fde68a">Bright row</b> = active coalition<br><span style="color:#8b949e">(&ge;2 members above median)</span></div>
+    </div>
+    <div class="stat-block" id="cohort-bars" style="padding:9px 10px;">
+      <div class="cohort-row" data-cohort="0">
+        <span class="cohort-label">gen 0</span>
+        <div class="cohort-track"><div class="cohort-fill"></div><div class="cohort-tick"></div></div>
+      </div>
+      <div class="cohort-row" data-cohort="1">
+        <span class="cohort-label">gen 1</span>
+        <div class="cohort-track"><div class="cohort-fill"></div><div class="cohort-tick"></div></div>
+      </div>
+      <div class="cohort-row" data-cohort="2">
+        <span class="cohort-label">gen 2</span>
+        <div class="cohort-track"><div class="cohort-fill"></div><div class="cohort-tick"></div></div>
+      </div>
+      <div class="cohort-row" data-cohort="3">
+        <span class="cohort-label">gen 3</span>
+        <div class="cohort-track"><div class="cohort-fill"></div><div class="cohort-tick"></div></div>
+      </div>
     </div>
   </div>
 
@@ -293,7 +359,7 @@
     <div class="section-label">Live Stats</div>
     <div class="stat-block">
       <div class="stat-row">
-        <span class="stat-label blue">τ(rank, tenure)</span>
+        <span class="stat-label blue">τ(rank, age)</span>
         <span class="stat-value blue" id="stat-rt">—</span>
       </div>
       <div class="stat-row">
@@ -305,20 +371,25 @@
         <span class="stat-value" style="color:#a78bfa" id="stat-leader">—</span>
       </div>
       <div class="stat-row" id="stat-betaeff-row" style="display:none">
-        <span class="stat-label" style="color:#fbbf24">eff. β</span>
+        <span class="stat-label" style="color:#fbbf24" title="β modulated by the current leader's age (Scene 3)">eff. β</span>
         <span class="stat-value" style="color:#fbbf24" id="stat-betaeff">—</span>
       </div>
     </div>
+    <div style="font-size:9.5px; color:#8b949e; margin-top:6px; line-height:1.5;">
+      τ = Kendall rank corr. (1 = perfect order, &minus;1 = inverted).
+    </div>
   </div>
 
-  <div class="hint">
-    High β → seniority dominates.<br>
-    High α → merit competes.<br>
-    High γ → seniors hold tight.<br>
-    High ν → competence drifts (no settling).<br>
-    Scene 2 → hoarding adapts.<br>
-    Scene 3 → coalitions + leader β.<br>
-    Hit ⚡ Mutiny to perturb.
+  <div>
+    <div class="section-label">Cheat sheet</div>
+    <div class="hint" style="border-top:none; padding-top:0;">
+      High β &rarr; seniority dominates.<br>
+      High α &rarr; merit competes.<br>
+      High γ &rarr; seniors hold tight.<br>
+      Scene 2 &rarr; hoarding adapts to threat.<br>
+      Scene 3 &rarr; cohorts lift their own.<br>
+      Hit ⚡ Mutiny to perturb the order.
+    </div>
   </div>
 
 </div>

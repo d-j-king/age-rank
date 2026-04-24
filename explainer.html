@@ -68,6 +68,35 @@
   .tag-lindbeck { background: #fce7f3; color: #9d174d; }
   .tag-akerlof { background: #d1fae5; color: #065f46; }
   .tag-noise { background: #fef3c7; color: #92400e; }
+  .cite {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: #f0f0f0;
+    color: #555;
+    border: 1px solid #d8d8d8;
+    text-decoration: none;
+    white-space: nowrap;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    letter-spacing: 0;
+    position: relative;
+    top: -1px;
+  }
+  .cite:hover { background: #e4e4e4; color: #1a1a1a; text-decoration: none; }
+  .ref-section { margin-top: 40px; padding-top: 24px; border-top: 1px solid #e5e5e5; }
+  .ref-section h2 { margin-bottom: 14px; }
+  .ref-list { list-style: none; padding: 0; margin: 0; }
+  .ref-list li {
+    font-size: 13px;
+    color: #444;
+    margin-bottom: 10px;
+    padding-left: 22px;
+    text-indent: -22px;
+    line-height: 1.55;
+  }
+  .ref-list li em { font-style: italic; }
   .slider-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
   .slider-table th {
     text-align: left;
@@ -101,7 +130,7 @@
     background: #fff;
   }
   .regime-card-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
-  .regime-card-cond { font-family: monospace; font-size: 12px; color: #888; margin-bottom: 6px; }
+  .regime-card-cond { font-size: 12px; color: #888; margin-bottom: 6px; }
   .regime-card-desc { font-size: 13px; color: #444; line-height: 1.5; }
   .scene2 {
     background: #1c1c2e;
@@ -120,21 +149,50 @@
 <h1>Why Seniority Persists</h1>
 <p class="subtitle">A quick guide to the model and its parameters</p>
 
-<h2>The Core Idea</h2>
+<h2>Motivation</h2>
 <p>
-Each person in the simulation has a fixed <strong>tenure</strong> (how long they've been around) and a fixed <strong>competence</strong> (how good they are). Their <strong>rank</strong> evolves over time pulled by three competing forces — plus random noise. The question is: which force wins?
+Within any age cohort, the variance in individual skill, judgment, and drive is large — often larger than the difference between age cohorts separated by a decade of experience. Therefore, one might expect a merit-driven company to produce a hierarchy that is substantially age-mixed. But this is rarely the case. In practice, most organizations are ordered by age far more strongly than would be predicted based on variance in skill. Something other than competence appears to be doing much of the work.
 </p>
 <p>
-In almost every real organization, the seniority force wins. The simulation lets you dial up each force independently to see why, and to find the regimes where merit can compete.
+Several mechanisms are at play here, including but not limited to the following.
+</p>
+<p>
+Before enumerating them, it is worth flagging a more general pattern. Social systems of any complexity tend to develop a dominant ordering along some scalar attribute; dominance hierarchies are near-universal among social species, and informal status rankings re-emerge even in organizations that aim to be flat. Some total ordering is likely to form whether or not everyone intends it. Age is an especially natural attribute around which such an ordering settles, because it is observable, is monotonically increasing, and does not require adjudicating everyone&#8217;s competence. The three mechanisms below explain why, once the ordering has fallen on age, it is difficult to dislodge.
+</p>
+<p>
+<strong>In-group solidarity.</strong> Once a senior cohort exists, its members share an interest in preserving the current ordering: they gatekeep promotions, vouch for one another, and coordinate informally around who rises and who does not. The ordering is self-reinforcing because the people with influence over the next round of promotions benefited from the previous round&#8217;s outcomes.
+</p>
+<p>
+<strong>Payscale insurance.</strong> A payscale that rises with age is itself a structural insurance arrangement. Younger employees support it because it promises future upside; older employees support it because they are currently drawing on it. The result is a shared incentive to preserve the age-based ordering that does not require any explicit coordination.
+</p>
+<p>
+<strong>Pulling up the ladder.</strong> Older employees accumulate institutional knowledge, relationships, and procedural access whose value depends on the incumbent&#8217;s cooperation. A senior who is bypassed can make a junior&#8217;s position harder to occupy without direct sabotage, by withholding context, declining to make introductions, or being slow to respond. The threat does not need to be exercised to shape decisions; its availability is enough to make organizations reluctant to promote against the age ordering in the first place.
+</p>
+<p>
+Each of these forces on its own might produce only partial stability. Together they can sustain what looks like a strong equilibrium around the seniority ordering. That equilibrium is common and well-documented; other equilibria remain possible, and different organizations settle at different points along the merit&#8211;seniority continuum. The goal of this simulation is to represent each force as a separate term with its own parameter, so that the conditions under which the seniority equilibrium dominates, weakens, or gives way can be examined directly.
+</p>
+
+<h2>The Core Idea</h2>
+<p>
+Each person in the simulation has a fixed <strong>age</strong> (read loosely as years of relevant experience) and a fixed <strong>competence</strong> (how good they are). Their <strong>rank</strong> evolves over time, pulled by three competing forces plus random noise. The question: which force wins?
+</p>
+<p>
+<strong>A note on age vs. tenure.</strong> These are different quantities: a 45-year-old hired from a competitor firm has high age but zero tenure at the new employer. The purely firm-specific pressures (institutional leverage, the ladder-pulling mechanism) are carried by tenure; the other two mechanisms operate along both age and tenure, with a real sociopsychological component to the age dimension in particular, since people feel viscerally that something is strange or awkward when they observe stark exceptions to age-based ranking. For clarity, the simulation collapses the two into a single time variable and calls it <em>age</em>, which readers can interpret loosely as biological age, years in the field, or time at the firm. A fuller model would split the two and weight them separately, without changing the qualitative story.
+</p>
+<p>
+In almost every real organization, the age-ordering force wins. The simulation lets you dial up each force independently to see why and to find the regimes where merit can compete.
 </p>
 
 <h2>The Equation</h2>
 <div class="eq-block">
   <div class="eq-main">$$dr_i = \bigl[\,\alpha(c_i - \bar{c}) \;-\; \beta(r_i - s_i) \;-\; \gamma H_i\,\bigr]\,dt \;+\; \sigma\,dW_i$$</div>
-  <div class="eq-sub">$$H_i = \tfrac{1}{N}\sum_{j}\max(0,\,\tau_j - \tau_i)\cdot\max(0,\,r_i - r_j)$$</div>
+  <div class="eq-sub">$$H_i = \tfrac{1}{N}\sum_{j}\max(0,\,a_j - a_i)\cdot\max(0,\,r_i - r_j)$$</div>
 </div>
 <p>
 Read it as: <em>the change in your rank each instant = merit pull + seniority pull + holdup pull + luck.</em>
+</p>
+<p style="font-size:13px; color:#555; background:#f1efe8; border-left:3px solid #d8d3c4; padding:10px 14px; margin: 8px 0 16px;">
+A subtlety on the $\alpha$ vs. $\beta$ comparison: the competence signal $(c_i - \bar{c})$ has standard deviation on the order of $0.18$, while the seniority target $s_i$ is spread across $[-1, 1]$ with standard deviation closer to $0.58$. The two forces act on signals of quite different scales, so even at $\alpha = \beta$, seniority exerts the stronger pull in practice. The $\alpha/\beta$ ratio should be read with that asymmetry in mind.
 </p>
 
 <h2>Every Term Explained</h2>
@@ -143,7 +201,7 @@ Read it as: <em>the change in your rank each instant = merit pull + seniority pu
   <div class="term-sym" style="color:#3b82f6">$\alpha(c_i - \bar{c})$</div>
   <div class="term-body">
     <div class="term-name">Meritocratic drift <span class="tag tag-lazear">α slider</span></div>
-    <div class="term-desc">Pulls your rank up if you're above-average competence, down if below. α controls how much the org actually rewards ability. In most orgs, α is small — talent is noticed slowly and incompletely.</div>
+    <div class="term-desc">Pulls your rank up if you're above-average competence, down if below. α controls how much the org actually rewards ability. In most orgs, α is small: talent is noticed slowly and incompletely.</div>
   </div>
 </div>
 
@@ -152,8 +210,8 @@ Read it as: <em>the change in your rank each instant = merit pull + seniority pu
   <div class="term-body">
     <div class="term-name">Seniority restoring force <span class="tag tag-lazear">β slider</span></div>
     <div class="term-desc">
-      Pulls your rank back toward $s_i$ — the rank your <em>tenure alone</em> predicts. Think of it as a spring: the further you've drifted from "your place in line," the harder it pulls you back.<br><br>
-      Where does this spring come from? Three sources: (1) <strong>deferred compensation</strong> — firms underpay juniors and overpay seniors on purpose; the future overpayment is a bond that breaks if seniority is skipped (Lazear 1979). (2) <strong>Tournament prizes</strong> — the pay gap between ranks is the incentive for everyone below; inverting rank compresses the prize (Lazear &amp; Rosen 1981). (3) <strong>Fairness norms</strong> — everyone watching recalibrates their expectations when the line is jumped (Akerlof &amp; Yellen 1990).
+      Pulls your rank back toward $s_i$, the rank your <em>age alone</em> predicts. Think of it as a spring: the further you've drifted from "your place in line," the harder it pulls you back.<br><br>
+      What three forces produce this &#8220;spring&#8221;? (1) <strong>Deferred compensation:</strong> firms underpay juniors and overpay seniors on purpose; the future overpayment is a bond that breaks if seniority is skipped <a class="cite" href="#ref-lazear79">Lazear 1979</a>. (2) <strong>Tournament prizes:</strong> the pay gap between ranks is the incentive for everyone below; inverting rank compresses the prize <a class="cite" href="#ref-lazear81">Lazear &amp; Rosen 1981</a>. (3) <strong>Fairness norms:</strong> everyone watching recalibrates their expectations when the line is jumped <a class="cite" href="#ref-akerlof">Akerlof &amp; Yellen 1990</a>.
     </div>
   </div>
 </div>
@@ -163,8 +221,8 @@ Read it as: <em>the change in your rank each instant = merit pull + seniority pu
   <div class="term-body">
     <div class="term-name">Insider holdup <span class="tag tag-lindbeck">γ slider</span></div>
     <div class="term-desc">
-      $H_i$ is nonzero only when junior $i$ is <em>currently outranking</em> some senior $j$. In that case, a force pushes $i$ back down — proportional to how far above $j$ they've risen and how much more senior $j$ is.<br><br>
-      This is your "hostage" intuition (Lindbeck &amp; Snower 1984): seniors who've been displaced can withhold cooperation, context, and access, making the junior's contributions less legible to the org. The formula captures the magnitude of their leverage.
+      $H_i$ is nonzero only when junior $i$ is <em>currently outranking</em> some senior $j$. In that case, a force pushes $i$ back down, proportional to how far above $j$ they've risen and how much more senior $j$ is.<br><br>
+      This is the "hostage" intuition <a class="cite" href="#ref-lindbeck">Lindbeck &amp; Snower 1988</a>: seniors who've been displaced can withhold cooperation, context, and access, making the junior's contributions less legible to the org. The formula captures the magnitude of their leverage.
     </div>
   </div>
 </div>
@@ -173,47 +231,47 @@ Read it as: <em>the change in your rank each instant = merit pull + seniority pu
   <div class="term-sym" style="color:#f59e0b">$\sigma\,dW_i$</div>
   <div class="term-body">
     <div class="term-name">Noise <span class="tag tag-noise">σ slider</span></div>
-    <div class="term-desc">Random shocks — politics, visibility, project luck, manager turnover. Not IQ-on-a-bad-day. More like "a key project landed on your desk this quarter that made you look great or terrible." Not essential to the dynamics; set σ ≈ 0 for clean motion.</div>
+    <div class="term-desc">Random shocks: politics, visibility, project luck, manager turnover. Think "a key project landed on your desk this quarter that made you look great or terrible." Not essential to the dynamics; set $\sigma \approx 0$ for clean motion.</div>
   </div>
 </div>
 
 <h2>The Variables on Each Dot</h2>
 <table class="slider-table">
   <tr><th>Var</th><th>Name</th><th>What it means</th></tr>
-  <tr><td>$\tau_i$</td><td>Tenure</td><td>Fixed. Determines x-position on the scatter. Grows very slowly. The "age ordering."</td></tr>
-  <tr><td>$c_i$</td><td>Competence</td><td>Fixed. Shown as dot color — blue = low, red = high. Drawn from a distribution at start.</td></tr>
-  <tr><td>$r_i$</td><td>Rank</td><td>The state variable — the only thing that moves. Determines y-position. This is what the SDE governs.</td></tr>
-  <tr><td>$s_i$</td><td>Seniority target</td><td>The rank $\tau_i$ <em>predicts</em> based on tenure order alone. The spring pulls $r_i$ toward $s_i$.</td></tr>
+  <tr><td>$a_i$</td><td>Age</td><td>Fixed. Determines x-position on the scatter. Read as years of relevant experience; see the note above on age vs. tenure.</td></tr>
+  <tr><td>$c_i$</td><td>Competence</td><td>Fixed. Shown as dot color (blue = low, red = high). Drawn from a distribution at start.</td></tr>
+  <tr><td>$r_i$</td><td>Rank</td><td>The state variable; the only thing that moves. Determines y-position. This is what the SDE governs.</td></tr>
+  <tr><td>$s_i$</td><td>Seniority target</td><td>The rank $a_i$ <em>predicts</em> based on age order alone. The spring pulls $r_i$ toward $s_i$.</td></tr>
   <tr><td>$H_i$</td><td>Holdup force</td><td>Computed from the current positions of all other agents. High when junior $i$ is sitting above many seniors.</td></tr>
 </table>
 
-<h2>Parameter Regimes (the 5 tabs)</h2>
+<h2>Parameter Regimes</h2>
 <div class="regime-grid">
   <div class="regime-card">
     <div class="regime-card-title">Seniority dominates</div>
-    <div class="regime-card-cond">α/β = 0.2, γ moderate</div>
-    <div class="regime-card-desc">After mutiny, cloud snaps back to diagonal fast. Blue τ(rank, tenure) recovers fully. The normal org.</div>
+    <div class="regime-card-cond">$\alpha/\beta = 0.2$,&nbsp; $\gamma$ moderate</div>
+    <div class="regime-card-desc">After mutiny, cloud snaps back to diagonal fast. Blue $\tau(\text{rank}, \text{age})$ recovers fully. The normal org.</div>
   </div>
   <div class="regime-card">
     <div class="regime-card-title">Meritocracy</div>
-    <div class="regime-card-cond">α/β = 6, γ ≈ 0</div>
-    <div class="regime-card-desc">Dots sort by color (red up, blue down). Orange τ(rank, comp) stays high. Tenure order is irrelevant.</div>
+    <div class="regime-card-cond">$\alpha/\beta = 6$,&nbsp; $\gamma \approx 0$</div>
+    <div class="regime-card-desc">Dots sort by color (red up, blue down). Orange $\tau(\text{rank}, \text{comp})$ stays high. Age order is irrelevant.</div>
   </div>
   <div class="regime-card">
     <div class="regime-card-title">Holdup fortress</div>
-    <div class="regime-card-cond">γ = 2.0, β = 0.2</div>
-    <div class="regime-card-desc">β is weak, so recovery after mutiny is driven by holdup alone — slower, lumpier, but still wins.</div>
+    <div class="regime-card-cond">$\gamma = 2.0$,&nbsp; $\beta = 0.2$</div>
+    <div class="regime-card-desc">β is weak, so recovery after mutiny is driven by holdup alone: slower and lumpier, but it still wins.</div>
   </div>
   <div class="regime-card">
     <div class="regime-card-title">Phase boundary</div>
-    <div class="regime-card-cond">α ≈ β, γ small</div>
-    <div class="regime-card-desc">Neither wins cleanly. After mutiny the cloud settles loosely — both τ values are moderate. The interesting middle.</div>
+    <div class="regime-card-cond">$\alpha \approx \beta$,&nbsp; $\gamma$ small</div>
+    <div class="regime-card-desc">Neither wins cleanly. After mutiny the cloud settles loosely; both $\tau$ values are moderate. The interesting middle.</div>
   </div>
 </div>
 
 <h2>Scene 2: The Replicator Layer</h2>
 <div class="scene2">
-  <p>Each senior now carries a <strong>hoarding intensity</strong> $h_i \in [0,1]$ — how hard they're working to withhold institutional knowledge. The gold ring around a senior dot shows $h_i$.</p>
+  <p>Each senior now carries a <strong>hoarding intensity</strong> $h_i \in [0,1]$, measuring how hard they're working to withhold institutional knowledge. The gold ring around a senior dot shows $h_i$.</p>
   <div class="eq-block">
     <div>$$\frac{dh_i}{dt} = \varepsilon \cdot v_i \;-\; \delta \cdot h_i$$</div>
     <div style="color:#888; font-size:12px; margin-top:4px">$v_i$ = number of juniors currently outranking senior $i$</div>
@@ -223,11 +281,19 @@ Read it as: <em>the change in your rank each instant = merit pull + seniority pu
 
 <h2>The Key Ratio to Remember</h2>
 <p>
-  <strong>α/β</strong> is the single number that determines which attractor you're in. Below ~0.5: seniority wins. Above ~2.0: merit wins. In between: mixed, sensitive to perturbations. Most real organizations sit around 0.1–0.3.
+  $\alpha/\beta$ is the single number that determines which attractor you're in. Below ~0.5: seniority wins. Above ~2.0: merit wins. In between: mixed, sensitive to perturbations. Most real organizations sit around 0.1–0.3.
 </p>
 
-<div class="footer">
-  Lazear (1979) · Lazear &amp; Rosen (1981) · Lindbeck &amp; Snower (1984) · Akerlof &amp; Yellen (1990) · Pluchino et al. (2010) · Kuran (1989)
+<div class="ref-section">
+  <h2>References</h2>
+  <ol class="ref-list">
+    <li id="ref-lazear79">Lazear, E.P. (1979). Why is there mandatory retirement? <em>Journal of Political Economy</em>, 87(6), 1261–1284.</li>
+    <li id="ref-lazear81">Lazear, E.P. &amp; Rosen, S. (1981). Rank-order tournaments as optimum labor contracts. <em>Journal of Political Economy</em>, 89(5), 841–864.</li>
+    <li id="ref-lindbeck">Lindbeck, A. &amp; Snower, D.J. (1988). <em>The Insider-Outsider Theory of Employment and Unemployment</em>. MIT Press. (See also: Lindbeck &amp; Snower, <em>Journal of Economic Perspectives</em>, 15(1), 165–188, 2001.)</li>
+    <li id="ref-akerlof">Akerlof, G.A. &amp; Yellen, J.L. (1990). The fair wage-effort hypothesis and unemployment. <em>Quarterly Journal of Economics</em>, 105(2), 255–283.</li>
+    <li id="ref-pluchino">Pluchino, A., Rapisarda, A. &amp; Garofalo, C. (2010). The Peter Principle revisited: A computational study. <em>Physica A</em>, 389(3), 467–472.</li>
+    <li id="ref-kuran">Kuran, T. (1989). Sparks and prairie fires: A theory of unanticipated political revolution. <em>Public Choice</em>, 61(1), 41–74.</li>
+  </ol>
 </div>
 
 </body>

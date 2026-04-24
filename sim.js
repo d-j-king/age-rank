@@ -11,8 +11,16 @@ let paused = false;
 let history = [];
 let mutinyMarkers = [];
 let mutinyFlash = 0;
+let mutinyFlashKind = 'random';  // 'random' → red, 'merit' → amber
 let pageLabel = '';
 const HISTORY_LEN = 500;
+
+// Scene 3 cohort state — updated each step, read by renderer
+let cohortStats = {
+  means:  [0, 0, 0, 0],
+  maxes:  [0, 0, 0, 0],
+  active: [false, false, false, false],
+};
 
 // Layout (set in setup / updateLayout)
 let scatterX, scatterY, scatterW, scatterH;
@@ -48,7 +56,6 @@ function applyUrlParams() {
   if (p.has('sigma')) set('sigma-slider', 'val-sigma', p.get('sigma'), v => v.toFixed(2));
   if (p.has('speed')) set('speed-slider', 'val-speed', p.get('speed'), v => v.toFixed(2) + '×');
   if (p.has('n'))     set('n-slider',     'val-n',     p.get('n'),     v => String(Math.round(v)));
-  if (p.has('drift'))  set('drift-slider',  'val-drift',  p.get('drift'),  v => v.toFixed(2));
   if (p.has('lambda')) set('lambda-slider', 'val-lambda', p.get('lambda'), v => v.toFixed(2));
   if (p.has('eta'))    set('eta-slider',    'val-eta',    p.get('eta'),    v => v.toFixed(2));
   if (p.has('scene')) setScene(parseInt(p.get('scene')));
@@ -75,6 +82,7 @@ function draw() {
 
     document.getElementById('stat-rt').textContent = tauRT.toFixed(3);
     document.getElementById('stat-rc').textContent = tauRC.toFixed(3);
+    if (currentScene === 3) updateCohortBarsDOM();
   }
 
   drawScatter();
@@ -92,7 +100,7 @@ function updateLayout() {
   scatterX = pad;
   scatterY = 36;
   scatterW = width - pad * 2;
-  scatterH = height * 0.60;
+  scatterH = height * 0.68;
 
   tsX = pad;
   tsY = scatterY + scatterH + 34;
@@ -101,10 +109,81 @@ function updateLayout() {
 }
 
 // ============================================================
+// Color helpers — diverging competence scale
+// ============================================================
+
+// Takes competence percentile in [0,1]; returns [r,g,b] on a
+// blue → gray → red diverging ramp centered on 0.5 (mean rank).
+function competenceColor(p) {
+  const t = constrain(p * 2 - 1, -1, 1);   // −1 blue, 0 gray, +1 red
+  const blue = [59, 130, 246];
+  const mid  = [156, 163, 175];
+  const red  = [239, 68, 68];
+  const lerp3 = (a, b, k) => [
+    a[0] + (b[0] - a[0]) * k,
+    a[1] + (b[1] - a[1]) * k,
+    a[2] + (b[2] - a[2]) * k,
+  ];
+  return t < 0 ? lerp3(mid, blue, -t) : lerp3(mid, red, t);
+}
+
+function drawCompetenceLegend(x, y, w, h) {
+  // Gradient bar
+  noStroke();
+  const steps = 32;
+  for (let k = 0; k < steps; k++) {
+    const p = k / (steps - 1);
+    const [r, g, b] = competenceColor(p);
+    fill(r, g, b, 230);
+    rect(x + (k / steps) * w, y, w / steps + 0.5, h);
+  }
+  // Frame
+  noFill();
+  stroke(60, 65, 72);
+  strokeWeight(1);
+  rect(x, y, w, h);
+  // Caption above, endpoint labels below
+  noStroke();
+  textSize(9);
+  fill(139, 148, 158);
+  textAlign(RIGHT, BOTTOM);
+  text('competence', x + w, y - 1);
+  textSize(8.5);
+  fill(99, 119, 139);
+  textAlign(LEFT, TOP);
+  text('low',  x,        y + h + 2);
+  textAlign(CENTER, TOP);
+  text('mean', x + w / 2, y + h + 2);
+  textAlign(RIGHT, TOP);
+  text('high', x + w,     y + h + 2);
+}
+
+// Push cohort state to the sidebar DOM bars (scene 3 only).
+function updateCohortBarsDOM() {
+  const COHORT_COLS = ['rgb(0,200,255)','rgb(80,220,80)','rgb(255,175,0)','rgb(180,80,255)'];
+  const rows = document.querySelectorAll('#cohort-bars .cohort-row');
+  rows.forEach((row, g) => {
+    const active = cohortStats.active[g];
+    const meanPct = Math.max(0, Math.min(1, (cohortStats.means[g] + 1) / 2));
+    const maxPct  = Math.max(0, Math.min(1, (cohortStats.maxes[g] + 1) / 2));
+    const fill = row.querySelector('.cohort-fill');
+    const tick = row.querySelector('.cohort-tick');
+    const label = row.querySelector('.cohort-label');
+    fill.style.width = (meanPct * 100) + '%';
+    fill.style.backgroundColor = COHORT_COLS[g];
+    fill.style.opacity = active ? '0.95' : '0.4';
+    tick.style.left = 'calc(' + (maxPct * 100) + '% - 1px)';
+    tick.style.opacity = active ? '0.9' : '0.35';
+    label.style.color = active ? COHORT_COLS[g] : '#6b7380';
+  });
+}
+
+// ============================================================
 // Agents
 // ============================================================
 
-function initAgents() {
+function initAgents(opts = {}) {
+  const startRandom = !!opts.startRandom;
   const N = parseInt(document.getElementById('n-slider').value);
   agents = [];
   for (let i = 0; i < N; i++) {
@@ -115,12 +194,20 @@ function initAgents() {
       hoard: 0.2,
     });
   }
-  // Start r near the seniority-ordered equilibrium; assign cohort by tenure quartile
+  // Assign cohort by age quartile (independent of r init)
   const byTau = [...agents].sort((a, b) => a.tau - b.tau);
   byTau.forEach((a, i) => {
-    a.r = (i / (agents.length - 1)) * 2 - 1 + randomGaussian(0, 0.07);
     a.cohort = Math.min(3, Math.floor(i / agents.length * 4));
   });
+  if (startRandom) {
+    // Scramble r uniformly in [−1, 1]; system must self-organize
+    agents.forEach(a => { a.r = random(-1, 1); });
+  } else {
+    // Start r near the seniority-ordered equilibrium
+    byTau.forEach((a, i) => {
+      a.r = (i / (agents.length - 1)) * 2 - 1 + randomGaussian(0, 0.07);
+    });
+  }
   history = [];
   mutinyMarkers = [];
 }
@@ -140,7 +227,7 @@ function stepAgents() {
   const eps    = 0.05;   // replicator learning rate
   const decay  = 0.025;  // hoard decay rate
 
-  // Seniority targets: map tenure rank → [−1, 1]
+  // Seniority targets: map age rank → [−1, 1]
   const byTau = [...agents].sort((a, b) => a.tau - b.tau);
   const sMap  = new Map(byTau.map((a, i) => [a, N > 1 ? (i / (N - 1)) * 2 - 1 : 0]));
   const medianTau = byTau[floor(N / 2)].tau;
@@ -148,22 +235,32 @@ function stepAgents() {
 
   // Scene 3: cohort solidarity + dynamic leadership beta
   let betaActive = beta;
-  let cohortMeans = null;
+  let cohortMaxes = null;
   let lambdaS3 = 0;
   if (currentScene === 3) {
     lambdaS3 = getParam('lambda-slider');
     const eta = getParam('eta-slider');
 
-    // Cohort mean ranks
-    const sums = new Float32Array(4);
+    // Cohort aggregates: mean, max, and count-above-median (for "coalition active")
+    const sums   = new Float32Array(4);
     const counts = new Int32Array(4);
+    const maxes  = [-Infinity, -Infinity, -Infinity, -Infinity];
+    const rSorted = agents.map(a => a.r).sort((x, y) => x - y);
+    const medianR = rSorted[floor(N / 2)];
+    const aboveMed = new Int32Array(4);
     for (let i = 0; i < N; i++) {
-      sums[agents[i].cohort] += agents[i].r;
-      counts[agents[i].cohort]++;
+      const g = agents[i].cohort;
+      sums[g] += agents[i].r;
+      counts[g]++;
+      if (agents[i].r > maxes[g]) maxes[g] = agents[i].r;
+      if (agents[i].r > medianR) aboveMed[g]++;
     }
-    cohortMeans = Array.from(sums, (s, g) => counts[g] > 0 ? s / counts[g] : 0);
+    cohortMaxes = maxes;
+    cohortStats.means  = Array.from(sums, (s, g) => counts[g] > 0 ? s / counts[g] : 0);
+    cohortStats.maxes  = maxes.map(m => m === -Infinity ? 0 : m);
+    cohortStats.active = Array.from(aboveMed, n => n >= 2);
 
-    // Leader = agent with highest current rank; their tenure percentile modulates beta
+    // Leader = agent with highest current rank; their age percentile modulates beta
     let leaderIdx = 0;
     for (let i = 1; i < N; i++) {
       if (agents[i].r > agents[leaderIdx].r) leaderIdx = i;
@@ -196,8 +293,11 @@ function stepAgents() {
     }
     holdup /= max(N - 1, 1);
 
-    const cohortPull = (currentScene === 3 && cohortMeans)
-      ? lambdaS3 * (cohortMeans[a.cohort] - a.r) : 0;
+    // Asymmetric coalition lift: high-ranked peers pull allies UP (never down).
+    // max(0, ·) means a cohort's top dog drags laggards up in their wake,
+    // but no symmetric "pull to mean" dragging high-rankers down.
+    const cohortPull = (currentScene === 3 && cohortMaxes)
+      ? lambdaS3 * Math.max(0, cohortMaxes[a.cohort] - a.r) : 0;
 
     dr[i] = (
       alpha      * (a.c - cMean)
@@ -228,15 +328,6 @@ function stepAgents() {
     }
   }
 
-  // Competence drift: OU process keeps distribution from piling at boundaries
-  const nu = getParam('drift-slider');
-  if (nu > 0) {
-    const meanRev = 0.05;
-    for (let i = 0; i < N; i++) {
-      const dc = -meanRev * (agents[i].c - 0.5) * dt + nu * sqrt(dt) * randomGaussian();
-      agents[i].c = constrain(agents[i].c + dc, 0.04, 0.96);
-    }
-  }
 }
 
 // ============================================================
@@ -312,17 +403,12 @@ function drawScatter() {
     text(sceneTag, sx + 10, sy + 22);
   }
 
-  // Competence key (top-right)
-  textAlign(RIGHT, TOP);
-  textSize(9.5);
-  fill(72, 79, 88);
-  text('dot color = competence  (blue → red)', sx + sw - 8, sy + 9);
 
   // Axis labels
   textAlign(CENTER, CENTER);
   textSize(10);
   fill(99, 119, 139);
-  text('← junior · tenure · senior →', sx + sw / 2, sy + sh + 16);
+  text('← young · age · old →', sx + sw / 2, sy + sh + 16);
   push();
   translate(sx - 26, sy + sh / 2);
   rotate(-HALF_PI);
@@ -334,14 +420,16 @@ function drawScatter() {
   const tP = tauPctiles();
   const cP = compPctiles();
 
-  // Cohort rings (scene 3) — colored by generation, drawn before dots
+  // Cohort rings (scene 3) — bright when that cohort has an active coalition
+  // (≥2 members above median rank), faint otherwise.
   if (currentScene === 3) {
     const COHORT_COLS = [[0,200,255],[80,220,80],[255,175,0],[180,80,255]];
     noFill();
-    strokeWeight(1.8);
     for (let i = 0; i < agents.length; i++) {
       const col = COHORT_COLS[agents[i].cohort];
-      stroke(col[0], col[1], col[2], 130);
+      const active = cohortStats.active[agents[i].cohort];
+      stroke(col[0], col[1], col[2], active ? 200 : 45);
+      strokeWeight(active ? 2.3 : 1.0);
       const px = sx + tP[i] * sw;
       const py = sy + (1 - rP[i]) * sh;
       ellipse(px, py, 22, 22);
@@ -361,22 +449,18 @@ function drawScatter() {
     }
   }
 
-  // Dots — switch colorMode once for the whole batch
-  colorMode(HSB, 360, 100, 100, 255);
+  // Dots — diverging scale around mean competence
   noStroke();
   for (let i = 0; i < agents.length; i++) {
     const px = sx + tP[i] * sw;
     const py = sy + (1 - rP[i]) * sh;
-    const hue = (1 - cP[i]) * 220;
-    fill(hue, 68, 88, 215);
+    const [cr, cg, cb] = competenceColor(cP[i]);
+    fill(cr, cg, cb, 225);
     ellipse(px, py, 13, 13);
   }
-  colorMode(RGB, 255);
 
-  // Leader highlight + cohort legend (scene 3)
+  // Leader highlight (scene 3)
   if (currentScene === 3) {
-    const COHORT_COLS = [[0,200,255],[80,220,80],[255,175,0],[180,80,255]];
-
     // Leader: highest rank percentile
     let leaderI = 0;
     for (let i = 1; i < agents.length; i++) {
@@ -388,34 +472,24 @@ function drawScatter() {
     stroke(255, 255, 255, 210);
     strokeWeight(2.5);
     ellipse(lpx, lpy, 25, 25);
+    // Star with dark halo for legibility against bright cohort rings
     noStroke();
-    fill(255, 255, 200, 230);
     textAlign(CENTER, BOTTOM);
+    textSize(13);
+    fill(15, 20, 28, 230);
+    text('★', lpx, lpy - 9);
     textSize(11);
+    fill(255, 236, 170, 240);
     text('★', lpx, lpy - 10);
 
-    // Cohort legend — bottom-left of scatter panel
-    let lx = sx + 10;
-    const ly = sy + sh - 16;
-    noStroke();
-    textSize(9);
-    textAlign(LEFT, CENTER);
-    for (let g = 0; g < 4; g++) {
-      const col = COHORT_COLS[g];
-      fill(col[0], col[1], col[2], 180);
-      ellipse(lx + 4, ly, 8, 8);
-      fill(99, 119, 139);
-      text('gen ' + g, lx + 11, ly);
-      lx += 46;
-    }
-    fill(255, 255, 200, 180);
-    text('★ leader', lx + 4, ly);
   }
 
-  // Mutiny flash overlay
+  // Mutiny flash overlay — red for random, amber for merit
   if (mutinyFlash > 0) {
     noStroke();
-    fill(220, 50, 50, map(mutinyFlash, 0, 18, 0, 55));
+    const a = map(mutinyFlash, 0, 18, 0, 55);
+    if (mutinyFlashKind === 'merit') fill(245, 158, 11, a);
+    else                             fill(220, 50, 50, a);
     rect(sx, sy, sw, sh, 6);
     mutinyFlash--;
   }
@@ -460,7 +534,7 @@ function drawTimeSeries() {
   const yRT = (idx) => yMid - history[idx].tauRT * yScale;
   const yRC = (idx) => yMid - history[idx].tauRC * yScale;
 
-  // Fill under τ(rank, tenure)
+  // Fill under τ(rank, age)
   noStroke();
   fill(79, 195, 247, 22);
   beginShape();
@@ -469,7 +543,7 @@ function drawTimeSeries() {
   vertex(xAt(n - 1), yMid);
   endShape(CLOSE);
 
-  // τ(rank, tenure) line — blue
+  // τ(rank, age) line — blue
   stroke(79, 195, 247);
   strokeWeight(2);
   noFill();
@@ -490,7 +564,7 @@ function drawTimeSeries() {
   textAlign(LEFT, TOP);
   textSize(9.5);
   fill(79, 195, 247);
-  text('— τ(rank, tenure)', tx + 8, ty + 6);
+  text('— τ(rank, age)', tx + 8, ty + 6);
   fill(255, 112, 67);
   text('— τ(rank, competence)', tx + 8, ty + 19);
 
@@ -501,6 +575,17 @@ function drawTimeSeries() {
   text('+1', tx + tw - 3, ty + 11);
   text('0',  tx + tw - 3, yMid);
   text('−1', tx + tw - 3, ty + th - 11);
+
+  // Time axis hint + τ primer
+  textAlign(LEFT, TOP);
+  textSize(9);
+  fill(72, 79, 88);
+  text('past', tx + 4, ty + th - 12);
+  textAlign(RIGHT, TOP);
+  text('now', tx + tw - 22, ty + th - 12);
+  textAlign(CENTER, TOP);
+  fill(99, 119, 139);
+  text('τ = 1 perfect order · 0 random · −1 inverted', tx + tw / 2, ty + th - 12);
 
   // Current-value labels at right edge of lines
   if (n > 0) {
@@ -537,6 +622,7 @@ function setScene(n) {
   document.getElementById('scene3-sliders').style.display = s3 ? 'flex' : 'none';
   document.getElementById('stat-leader-row').style.display = s3 ? 'flex' : 'none';
   document.getElementById('stat-betaeff-row').style.display = s3 ? 'flex' : 'none';
+  document.getElementById('coalitions-panel').style.display = s3 ? 'block' : 'none';
 }
 
 function togglePause() {
@@ -555,6 +641,7 @@ function reshuffleMutiny() {
   }
   agents.forEach((a, i) => { a.r = rs[i]; });
   mutinyFlash = 18;
+  mutinyFlashKind = 'random';
   mutinyMarkers.push(0);
 }
 
@@ -564,13 +651,18 @@ function meritocraticMutiny() {
   const rs = [...agents].sort((a, b) => a.r - b.r).map(a => a.r);
   byComp.forEach((a, i) => { a.r = rs[i]; });
   mutinyFlash = 18;
+  mutinyFlashKind = 'merit';
   mutinyMarkers.push(0);
 }
 
-function resetSim() {
-  initAgents();
+function resetSim(opts = {}) {
+  initAgents(opts);
   document.getElementById('stat-rt').textContent = '—';
   document.getElementById('stat-rc').textContent = '—';
+}
+
+function resetSimRandom() {
+  resetSim({ startRandom: true });
 }
 
 function onNChange(val) {
