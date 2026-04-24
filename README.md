@@ -6,7 +6,7 @@
 
 An interactive simulation of workplace rank dynamics, grounded in economic theory.
 
-**Why is age-based ranking such a persistent equilibrium in the workplace?** Within any age group, people vary far more in skill and judgment than the average gap between age cohorts. Given those overlapping distributions, you'd expect workplace rank to track competence, with age as just one weak predictor among many. It doesn't. This simulation explores the forces that sustain age-based ordering, and the conditions under which merit can compete.
+**Why is age-based ranking such a persistent equilibrium in the workplace?** Within any age group, people vary far more in skill and judgment than the average gap between age cohorts. Given those overlapping distributions, you'd expect workplace rank to track competence, with age as just one weak predictor among many. It doesn't. This simulation explores the forces that sustain age-based ordering and the conditions under which merit can compete.
 
 ## What you're looking at
 

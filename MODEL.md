@@ -2,7 +2,7 @@
 
 ## Overview
 
-Workplace seniority is sticky in a way that feels irrational: even when a younger person is visibly more capable, promoting them over an older colleague produces discomfort disproportionate to any practical objection. This is not a social accident. Several independent strands of economic theory — deferred compensation, rank tournaments, insider holdup, fairness norms, and threshold coordination games — each predict the same equilibrium. When you combine them into a single dynamical system, the seniority ordering emerges as a deep basin of attraction: perturbations (e.g., a sudden meritocratic promotion) decay back toward the age-ordered state. This document synthesizes the mechanisms and proposes a unified stochastic model.
+Workplace seniority is sticky in a way that feels irrational: even when a younger person is visibly more capable, promoting them over an older colleague produces discomfort disproportionate to any practical objection. This is not a social accident. Several independent strands of economic theory—deferred compensation, rank tournaments, insider holdup, fairness norms, and threshold coordination games—each predict the same equilibrium. When you combine them into a single dynamical system, the seniority ordering emerges as a deep basin of attraction: perturbations (e.g., a sudden meritocratic promotion) decay back toward the age-ordered state. This document synthesizes the mechanisms and proposes a unified stochastic model.
 
 ---
 
@@ -10,10 +10,10 @@ Workplace seniority is sticky in a way that feels irrational: even when a younge
 
 | Mechanism | Model | Key claim |
 |---|---|---|
-| **Deferred compensation** | Lazear (1979) | Firms underpay the young and overpay the old on purpose. Employees accept this because the future overpayment is their bond. Breaking the seniority order destroys the bond and the incentive it creates — for everyone. |
+| **Deferred compensation** | Lazear (1979) | Firms underpay the young and overpay the old on purpose. Employees accept this because the future overpayment is their bond. Breaking the seniority order destroys the bond and the incentive it creates—for everyone. |
 | **Rank-order tournaments** | Lazear & Rosen (1981) | Pay is tied to rank, not raw productivity. The prize gap between levels is what motivates effort at every rung below. Inverting the rank order compresses the prize and unravels the incentive structure. |
 | **Insider-outsider holdup** | Lindbeck & Snower (1984–2001) | Incumbent employees impose rent-related turnover costs when bypassed. Institutional knowledge is exactly this rent: seniors can withhold cooperation, context, and access, raising the cost of making any replacement or skip-promotion productive. |
-| **Fairness norms / wage rigidity** | Akerlof & Yellen (1990) | Equity violations reduce morale and effort even among agents not directly affected. The *embarrassment* of announcing an age-inverted promotion is a rational signal of norm violation — everyone watching recalibrates their beliefs about the stability of the compensation contract. |
+| **Fairness norms / wage rigidity** | Akerlof & Yellen (1990) | Equity violations reduce morale and effort even among agents not directly affected. The *embarrassment* of announcing an age-inverted promotion is a rational signal of norm violation—everyone watching recalibrates their beliefs about the stability of the compensation contract. |
 | **Peter Principle (ABM)** | Pluchino, Rapisarda & Garofalo (2010) | Agent-based pyramid simulation of 160 agents. Shows that promoting the most competent person systematically degrades organizational efficiency when competence is level-dependent. Random promotion does better. The model predicts that even well-intentioned meritocracy misfires. |
 | **Threshold coordination** | Kuran (1989) | Most insiders might privately prefer a more meritocratic ordering, but publicly conform to seniority because everyone else does. This is a stable coordination equilibrium: revolt only works when enough others revolt simultaneously, and no one can commit to that publicly. Reshuffles are therefore rare, sudden, and fragile. |
 
@@ -45,7 +45,7 @@ $$dr_i = \bigl[\,\alpha(c_i - \bar{c}) \;-\; \beta(r_i - s_i) \;-\; \gamma H_i\,
 $$H_i = \frac{1}{N}\sum_{j}\max(0,\,\tau_j - \tau_i)\cdot\max(0,\,r_i - r_j)$$
   This is nonzero only when junior i is ranked above some senior j. The term pushes i back down proportional to how far above j they've risen and how much more senior j is. This is the holdup mechanism: seniors have leverage precisely when they've been displaced.
 
-- **σ dWᵢ**: noise — politics, favoritism, information asymmetry, luck.
+- **σ dWᵢ**: noise—politics, favoritism, information asymmetry, luck.
 
 **Equilibrium:** Setting the drift to zero in expectation:
 
@@ -77,15 +77,15 @@ Where:
 
 This is a replicator-like equation: hoarding rises when the senior feels threatened (post-mutiny vᵢ spikes) and decays in calm periods. The feedback loop is self-reinforcing: hoarding raises γᵢ, which strengthens the holdup force, which accelerates rank recovery, which lowers vᵢ, which allows hoarding to decay. The seniority equilibrium is endogenously stable, not just an external norm.
 
-**Key prediction:** Organizations that attempt top-down meritocratic reshuffles should expect a surge in knowledge-hoarding behavior before any efficiency gains materialize. The hoarding surge is not irrational — it is the equilibrium response.
+**Key prediction:** Organizations that attempt top-down meritocratic reshuffles should expect a surge in knowledge-hoarding behavior before any efficiency gains materialize. The hoarding surge is not irrational—it is the equilibrium response.
 
 ---
 
 ## Testable Predictions
 
-1. **Rate of recovery**: After any rank perturbation, Kendall-τ(rank, tenure) should recover at a rate proportional to β. A natural experiment is leadership transitions or restructurings — track time-to-re-senioritization.
+1. **Rate of recovery**: After any rank perturbation, Kendall-τ(rank, tenure) should recover at a rate proportional to β. A natural experiment is leadership transitions or restructurings—track time-to-re-senioritization.
 
-2. **Meritocracy requires sustained pressure**: The meritocratic equilibrium (high α/β) is a weaker attractor. A single shock (external hire, forced reshuffle) decays unless the underlying payoff ratios change — i.e., merit must be rewarded structurally, not just episodically.
+2. **Meritocracy requires sustained pressure**: The meritocratic equilibrium (high α/β) is a weaker attractor. A single shock (external hire, forced reshuffle) decays unless the underlying payoff ratios change—i.e., merit must be rewarded structurally, not just episodically.
 
 3. **Mutiny dynamics (Kuran)**: Because the seniority norm is a coordination equilibrium, a small perturbation causes nothing, but a sufficiently large synchronized shock (e.g., mass layoff + rehire, founder departure) can cause a phase transition to a new equilibrium. Small nudges fail; discontinuous shocks sometimes succeed.
 
