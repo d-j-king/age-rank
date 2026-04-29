@@ -64,7 +64,7 @@ Rank tracks seniority, with a small competence perturbation scaled by α/β. Mos
 
 ---
 
-## Game-Theoretic Extension: The Replicator Layer
+## Game-Theoretic Extension: The Adaptive Layer
 
 In Scene 2, each senior carries a **hoarding intensity** hᵢ ∈ [0,1] representing their effort to withhold institutional knowledge. The effective holdup becomes γᵢ = γ · hᵢ. Hoarding evolves as:
 
@@ -75,7 +75,7 @@ Where:
 - **ε** = responsiveness to threats
 - **δ** = natural decay rate (hoarding has costs: collaboration suffers, knowledge stagnates)
 
-This is a replicator-like equation: hoarding rises when the senior feels threatened (post-mutiny vᵢ spikes) and decays in calm periods. The feedback loop is self-reinforcing: hoarding raises γᵢ, which strengthens the holdup force, which accelerates rank recovery, which lowers vᵢ, which allows hoarding to decay. The seniority equilibrium is endogenously stable, not just an external norm.
+The hoarding intensity follows a leaky integrator: it rises when the senior feels threatened (post-mutiny vᵢ spikes) and decays in calm periods. The feedback loop is self-reinforcing: hoarding raises γᵢ, which strengthens the holdup force, which accelerates rank recovery, which lowers vᵢ, which allows hoarding to decay. The seniority equilibrium is endogenously stable, not just an external norm.
 
 **Key prediction:** Organizations that attempt top-down meritocratic reshuffles should expect a surge in knowledge-hoarding behavior before any efficiency gains materialize. The hoarding surge is not irrational—it is the equilibrium response.
 

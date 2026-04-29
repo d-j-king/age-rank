@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Seniority Dynamics — Theory</title>
+<title>Age-Rank — Theory</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
@@ -146,8 +146,8 @@
 </head>
 <body>
 
-<h1>Why Seniority Persists</h1>
-<p class="subtitle">A quick guide to the model and its parameters</p>
+<h1>Age-Rank</h1>
+<p class="subtitle">Why Seniority Persists—Theory &amp; Model</p>
 
 <h2>Motivation</h2>
 <p>
@@ -160,7 +160,7 @@ Several mechanisms are at play here, including but not limited to the following.
 Before enumerating them, it is worth flagging a more general pattern. Social systems of any complexity tend to develop a dominant ordering along some scalar attribute; dominance hierarchies are near-universal among social species, and informal status rankings re-emerge even in organizations that aim to be flat. Some total ordering is likely to form whether or not everyone intends it. Age is an especially natural attribute around which such an ordering settles, because it is observable, is monotonically increasing, and does not require adjudicating everyone&#8217;s competence. The three mechanisms below explain why, once the ordering has fallen on age, it is difficult to dislodge.
 </p>
 <p>
-<strong>In-group solidarity.</strong> Once a senior cohort exists, its members share an interest in preserving the current ordering, by vouching for one another, coordinating informally around who rises, etc. The ordering is self-reinforcing because the people with influence over the next round of promotions benefited from the previous round&#8217;s outcomes. Simply put, humans also feel a visceral comfort and kinship with those closer in age; they just relate.
+<strong>In-group solidarity.</strong> Once a senior cohort exists, its members share an interest in preserving the current ordering, by vouching for one another, coordinating informally around who rises, etc. The ordering is self-reinforcing because the people with influence over the next round of promotions benefited from the previous round&#8217;s outcomes. Simply put, humans also feel a visceral comfort and kinship with those closer in age; they just relate. (This mechanism is formalized in Scene 3 below.)
 </p>
 <p>
 <strong>Payscale insurance.</strong> A payscale that rises with age is itself a structural insurance arrangement. Younger employees support it because it promises future upside; older employees support it because they are currently drawing on it. The result is a shared incentive to preserve the age-based ordering that does not require explicit coordination.
@@ -189,10 +189,13 @@ In almost every real organization, the age-ordering force wins. The simulation l
   <div class="eq-sub">$$H_i = \tfrac{1}{N}\sum_{j}\max(0,\,a_j - a_i)\cdot\max(0,\,r_i - r_j)$$</div>
 </div>
 <p>
-Read it as: <em>the change in your rank each instant = merit pull + seniority pull + holdup pull + luck.</em>
+Read it as: <em>the change in your rank each instant = merit pull + seniority pull + ladder-pulling + luck.</em>
 </p>
 <p style="font-size:13px; color:#555; background:#f1efe8; border-left:3px solid #d8d3c4; padding:10px 14px; margin: 8px 0 16px;">
 A subtlety on the $\alpha$ vs. $\beta$ comparison: the competence signal $(c_i - \bar{c})$ has standard deviation on the order of $0.18$, while the seniority target $s_i$ is spread across $[-1, 1]$ with standard deviation closer to $0.58$. The two forces act on signals of quite different scales, so even at $\alpha = \beta$, seniority exerts the stronger pull in practice. The $\alpha/\beta$ ratio should be read with that asymmetry in mind.
+</p>
+<p style="font-size:13px; color:#555; margin: 0 0 16px;">
+Payscale insurance maps to $\beta$; ladder-pulling to $\gamma$; in-group solidarity to the network lift $\lambda$ in Scene 3. The $\alpha$ term stands apart&#8212;it is the pull of merit, the one force working against the seniority equilibrium rather than sustaining it.
 </p>
 
 <h2>Every Term Explained</h2>
@@ -219,10 +222,10 @@ A subtlety on the $\alpha$ vs. $\beta$ comparison: the competence signal $(c_i -
 <div class="term-row">
   <div class="term-sym" style="color:#ef4444">$-\gamma H_i$</div>
   <div class="term-body">
-    <div class="term-name">Insider holdup <span class="tag tag-lindbeck">γ slider</span></div>
+    <div class="term-name">Ladder-pulling <span class="tag tag-lindbeck">γ slider</span></div>
     <div class="term-desc">
-      $H_i$ is nonzero only when junior $i$ is <em>currently outranking</em> some senior $j$. In that case, a force pushes $i$ back down, proportional to how far above $j$ they've risen and how much more senior $j$ is.<br><br>
-      This is the "hostage" intuition <a class="cite" href="#ref-lindbeck">Lindbeck &amp; Snower 1988</a>: seniors who've been displaced can withhold cooperation, context, and access, making the junior's contributions less legible to the org. The formula captures the magnitude of their leverage.
+      The formal version of the ladder-pulling mechanism described above. $H_i$ is nonzero only when junior $i$ is <em>currently outranking</em> some senior $j$&#8212;meaning a displaced senior can push back. The force on $i$ is proportional to how far above $j$ they&#8217;ve risen and how much more senior $j$ is.<br><br>
+      The tournament literature shows that large rank-prize spreads create incentives to impede rivals rather than outperform them <a class="cite" href="#ref-lazear89">Lazear 1989</a>&#8212;a senior threatened by a rising junior faces this incentive directly. Withholding cooperation, context, and access makes the junior&#8217;s contributions less legible to the org without any overt act required. Economists label the structural leverage this creates <em>insider holdup</em> <a class="cite" href="#ref-lindbeck">Lindbeck &amp; Snower 1988</a>&#8212;though their original framing is the labor market, the within-firm mechanism is the same.
     </div>
   </div>
 </div>
@@ -264,12 +267,12 @@ A subtlety on the $\alpha$ vs. $\beta$ comparison: the competence signal $(c_i -
   </div>
   <div class="regime-card">
     <div class="regime-card-title">Phase boundary</div>
-    <div class="regime-card-cond">$\alpha \approx \beta$,&nbsp; $\gamma$ small</div>
-    <div class="regime-card-desc">Neither wins cleanly. After mutiny the cloud settles loosely; both $\tau$ values are moderate. The interesting middle.</div>
+    <div class="regime-card-cond">$\alpha/\beta \approx 2$,&nbsp; $\gamma$ small</div>
+    <div class="regime-card-desc">The actual phase boundary, accounting for the scale asymmetry. Neither attractor dominates: after mutiny, both $\tau$ values fluctuate and the outcome is sensitive to noise.</div>
   </div>
 </div>
 
-<h2>Scene 2: The Replicator Layer</h2>
+<h2>Scene 2: The Adaptive Layer</h2>
 <div class="scene2">
   <p>Each senior now carries a <strong>hoarding intensity</strong> $h_i \in [0,1]$, measuring how hard they're working to withhold institutional knowledge. The gold ring around a senior dot shows $h_i$.</p>
   <div class="eq-block">
@@ -277,6 +280,16 @@ A subtlety on the $\alpha$ vs. $\beta$ comparison: the competence signal $(c_i -
     <div style="color:#888; font-size:12px; margin-top:4px">$v_i$ = number of juniors currently outranking senior $i$</div>
   </div>
   <p>When a mutiny strikes, violation counts spike → hoarding intensifies → holdup force strengthens → seniority order is restored faster → violations drop → hoarding decays. The equilibrium defends itself endogenously. This is why top-down meritocratic reshuffles tend to fail: they trigger the very behavior (knowledge-hoarding) that reverses them.</p>
+</div>
+
+<h2>Scene 3: The Solidarity Network</h2>
+<div class="scene2">
+  <p>Each agent is embedded in a social graph whose edges represent relationships&#8212;shared cohort, shared history, informal alliance. A neighbor with higher perceived standing exerts upward lift; the force is asymmetric, since those already surpassed offer nothing further. This is the formal rendering of in-group solidarity: advantage that flows along the lines people actually draw around themselves.</p>
+  <div class="eq-block">
+    <div>$$\text{lift}_i = \frac{\lambda}{N-1}\sum_{j \,\sim\, i} \max(0,\, p_j - p_i)$$</div>
+    <div style="color:#888; font-size:12px; margin-top:4px">$p_k = (1-\rho)\,r_k + \rho\,c_k$ &nbsp;·&nbsp; $j \sim i$ = neighbor of $i$ &nbsp;·&nbsp; $\lambda$ = lift strength &nbsp;·&nbsp; $\rho$ = recognition weight (default 0)</div>
+  </div>
+  <p>Three graph topologies are available. <em>Age-banded</em> graphs pack edges within cohorts&#8212;the homophily case, where people cluster with those close in age. <em>Small-world</em> graphs add sparse cross-cohort bridges, capturing the mentor or sponsor relationship that ties a junior to a distant senior. <em>Random</em> graphs serve as the null: uniform connectivity, no age structure. The age-banded topology reinforces the seniority equilibrium; cross-cohort bridges are the mechanism by which an individual can escape the ceiling of their cohort.</p>
 </div>
 
 <h2>The Key Ratio to Remember</h2>
@@ -289,6 +302,7 @@ A subtlety on the $\alpha$ vs. $\beta$ comparison: the competence signal $(c_i -
   <ol class="ref-list">
     <li id="ref-lazear79">Lazear, E.P. (1979). Why is there mandatory retirement? <em>Journal of Political Economy</em>, 87(6), 1261–1284.</li>
     <li id="ref-lazear81">Lazear, E.P. &amp; Rosen, S. (1981). Rank-order tournaments as optimum labor contracts. <em>Journal of Political Economy</em>, 89(5), 841–864.</li>
+    <li id="ref-lazear89">Lazear, E.P. (1989). Pay equality and industrial politics. <em>Journal of Political Economy</em>, 97(3), 561–580.</li>
     <li id="ref-lindbeck">Lindbeck, A. &amp; Snower, D.J. (1988). <em>The Insider-Outsider Theory of Employment and Unemployment</em>. MIT Press. (See also: Lindbeck &amp; Snower, <em>Journal of Economic Perspectives</em>, 15(1), 165–188, 2001.)</li>
     <li id="ref-akerlof">Akerlof, G.A. &amp; Yellen, J.L. (1990). The fair wage-effort hypothesis and unemployment. <em>Quarterly Journal of Economics</em>, 105(2), 255–283.</li>
     <li id="ref-pluchino">Pluchino, A., Rapisarda, A. &amp; Garofalo, C. (2010). The Peter Principle revisited: A computational study. <em>Physica A</em>, 389(3), 467–472.</li>

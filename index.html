@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seniority Dynamics</title>
+<title>Age-Rank</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
@@ -207,6 +207,20 @@
   .launch-btn.scene2 { background: #2d1a4a; color: #c9a8f5; border-color: #8b5cf650; }
   .launch-btn.scene2:hover { background: #3a2060; }
 
+  .theory-card {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 28px;
+    text-decoration: none;
+    transition: border-color 0.15s;
+  }
+  .theory-card:hover { border-color: #388bfd; text-decoration: none; }
+  .theory-card-title { font-weight: 700; font-size: 16px; color: #f0f6fc; margin-bottom: 8px; }
+  .theory-card-desc { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 14px; }
+  .theory-card-cta { font-size: 13px; font-weight: 600; color: var(--blue); }
+
   footer {
     border-top: 1px solid var(--border);
     text-align: center;
@@ -216,22 +230,56 @@
   }
   footer a { color: var(--muted); }
   footer a:hover { color: var(--text); }
+
+  .site-nav {
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+  }
+  .site-nav-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+  }
+  .site-nav-wordmark {
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: #f0f6fc;
+    text-decoration: none;
+  }
+  .site-nav-wordmark:hover { text-decoration: none; color: #fff; }
+  .site-nav-links { display: flex; gap: 20px; font-size: 13px; }
+  .site-nav-links a { color: var(--muted); }
+  .site-nav-links a:hover { color: var(--text); text-decoration: none; }
 </style>
 </head>
 <body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a class="site-nav-wordmark" href="index.html">Age-Rank</a>
+    <div class="site-nav-links">
+      <a href="explainer.html" target="_blank">Theory</a>
+      <a href="sim.html">Simulation</a>
+    </div>
+  </div>
+</nav>
 
 <div class="hero">
   <div class="hero-eyebrow">Psychology · Economics · Game Theory</div>
   <h1>Why Is Age-Based Ranking Such a Persistent Equilibrium in the Workplace?</h1>
   <p>
-    Within any age group, people vary far more in skill and judgment than the average gap between age cohorts. Given those overlapping distributions, you'd expect workplace rank to track competence, with age as just one weak predictor among many. It doesn't. This simulation explores the forces that sustain age-based ordering and the conditions under which merit can compete.
+    Why seniority in the workplace often regresses to an age-based ranking—and why that is so sticky.
   </p>
   <div class="hero-video">
     <video src="demo.mp4" autoplay loop muted playsinline></video>
   </div>
   <div class="hero-actions">
     <a class="btn-primary" href="sim.html">Open Simulation</a>
-    <a class="btn-secondary" href="#why">Read the Theory</a>
+    <a class="btn-secondary" href="explainer.html" target="_blank">Read the Theory</a>
   </div>
 </div>
 
@@ -265,6 +313,9 @@
     Color shows <strong style="color:var(--text)">competence</strong> (blue = lower, red = higher).
     When the dots align along the diagonal, rank perfectly matches age: seniority order is preserved.
   </p>
+  <p style="font-size:13px; color:var(--muted); line-height:1.7; padding:12px 16px; background:var(--surface); border:1px solid var(--border); border-radius:8px; margin-bottom:20px;">
+    <strong style="color:var(--text)">On the word <em>seniority</em>.</strong> Many readers will reach for <em>seniority</em> to describe parts of this model. To avoid confusion, I use <em>rank</em> for hierarchical position and <em>age</em> for tenure. The word <em>seniority</em> will not be used again.
+  </p>
   <p style="color:var(--muted); margin-bottom:20px; font-size:14px;">
     Three forces act on each dot's rank every frame:
   </p>
@@ -280,16 +331,16 @@
       <div class="how-desc">Pulls rank back toward what age predicts. Captures deferred pay structures, fairness norms, and the stability of long-term employment contracts.</div>
     </div>
     <div class="how-card">
-      <div class="how-sym" style="color:#f78166">γ · experience</div>
-      <div class="how-name">Experience advantage</div>
-      <div class="how-desc">Reflects the weight of institutional knowledge. When the age ordering is disrupted, the cost of transferring accumulated context creates a gravitational pull toward restoring it.</div>
+      <div class="how-sym" style="color:#f78166">γ · holdup</div>
+      <div class="how-name">Ladder-pulling</div>
+      <div class="how-desc">When a junior outranks a senior, the displaced senior can resist—withholding context, slowing introductions, declining to vouch. The threat rarely needs to be exercised; its existence is enough to make organizations reluctant to skip the line.</div>
     </div>
   </div>
   <div class="eq-block">
     <div class="eq-main">$$dr_i = \bigl[\,\alpha(c_i - \bar{c}) \;-\; \beta(r_i - s_i) \;-\; \gamma H_i\,\bigr]\,dt \;+\; \sigma\,dW_i$$</div>
     <div class="eq-note">
       $s_i$ = rank predicted by age alone &nbsp;·&nbsp;
-      $H_i$ = experience-weighted pressure from age-order inversions &nbsp;·&nbsp;
+      $H_i$ = holdup pressure when juniors outrank seniors &nbsp;·&nbsp;
       $\sigma\,dW_i$ = random shocks
     </div>
   </div>
@@ -332,12 +383,12 @@
     <div class="scenario-card">
       <div class="scenario-num">03</div>
       <div class="scenario-body">
-        <div class="scenario-title">Strong experience advantage</div>
+        <div class="scenario-title">Pure ladder-pulling</div>
         <div class="scenario-params">$\alpha = 0.20 \;\cdot\; \beta = 0.20 \;\cdot\; \gamma = 2.0$</div>
-        <div class="scenario-desc">The formal seniority norm ($\beta$) is weak, but institutional knowledge carries substantial weight ($\gamma$). Recovery after a disruption is sustained by the value of accumulated context rather than by explicit policy.</div>
-        <div class="scenario-watch">Watch: recovery is slower and less uniform than Scenario 1, but the seniority ordering is still restored.</div>
+        <div class="scenario-desc">No explicit seniority norm ($\beta$ near zero)—no deferred pay structure, no fairness rule. What enforces the age order instead is $\gamma$: displaced seniors actively resist by withholding cooperation and context. The equilibrium sustains itself through behavior, not policy.</div>
+        <div class="scenario-watch">Watch: recovery after the reshuffle is slower and lumpier than Scenario 1, but the age ordering still wins.</div>
       </div>
-      <a class="launch-btn" href="sim.html?alpha=0.2&beta=0.2&gamma=2.0&sigma=0.04&speed=0.5&label=Strong+experience+advantage&mutiny=1" target="_blank">Launch ↗</a>
+      <a class="launch-btn" href="sim.html?alpha=0.2&beta=0.2&gamma=2.0&sigma=0.04&speed=0.5&label=Pure+ladder-pulling&mutiny=1" target="_blank">Launch ↗</a>
     </div>
 
     <div class="scenario-card">
@@ -365,6 +416,15 @@
   </div>
 </div>
 
+<div class="section">
+  <div class="section-label">Full theory</div>
+  <a class="theory-card" href="explainer.html" target="_blank">
+    <div class="theory-card-title">Why Seniority Persists—Theory &amp; Math</div>
+    <div class="theory-card-desc">The mechanisms in plain language, every term in the SDE explained, parameter regimes mapped, and the adaptive hoarding (Scene 2) and solidarity network (Scene 3) covered in full. Includes all references.</div>
+    <div class="theory-card-cta">Read the explainer →</div>
+  </a>
+</div>
+
 <footer>
   <p style="font-weight:600; margin-bottom:16px; color:var(--text);">References</p>
   <ol style="text-align:left; display:inline-block; margin:0 auto; padding-left:20px; max-width:640px;">
@@ -375,7 +435,6 @@
     <li style="margin-bottom:8px;">Pluchino, A., Rapisarda, A. &amp; Garofalo, C. (2010). The Peter Principle revisited: A computational study. <em>Physica A</em>, 389(3), 467–472.</li>
     <li style="margin-bottom:8px;">Kuran, T. (1989). Sparks and prairie fires: A theory of unanticipated political revolution. <em>Public Choice</em>, 61(1), 41–74.</li>
   </ol>
-  <p style="margin-top:20px;"><a href="MODEL.md">Model details</a> &nbsp;·&nbsp; <a href="explainer.html" target="_blank">Theory explainer</a></p>
 </footer>
 
 </body>

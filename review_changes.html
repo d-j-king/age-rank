@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Change Review — Seniority Dynamics</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f6f8fa; color: #1a1a2e;
+    font-size: 14px; line-height: 1.6;
+    max-width: 960px; margin: 0 auto; padding: 40px 24px 80px;
+  }
+  h1 { font-size: 20px; font-weight: 800; margin-bottom: 4px; color: #111; }
+  .meta { font-size: 12px; color: #888; margin-bottom: 40px; }
+
+  .fix { margin-bottom: 44px; }
+  .fix-header {
+    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 2px solid #e1e4e8;
+  }
+  .fix-num {
+    font-size: 11px; font-weight: 700; color: #fff;
+    background: #1a1a2e; border-radius: 4px;
+    padding: 2px 8px; letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .fix-title { font-size: 16px; font-weight: 700; color: #111; }
+  .fix-file { font-size: 11px; color: #888; font-family: monospace; margin-left: auto; white-space: nowrap; }
+
+  .sub-label { font-size: 11px; color: #555; font-style: italic; margin: 14px 0 6px; }
+  .change-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .before-label { color: #ef4444; }
+  .after-label  { color: #16a34a; }
+  .new-label    { color: #16a34a; }
+
+  .diff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  pre {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 12px; line-height: 1.65;
+    border-radius: 6px; padding: 12px 14px;
+    white-space: pre-wrap; word-break: break-word; margin: 0;
+  }
+  .before   { background: #fff5f5; border: 1px solid #fca5a5; color: #7f1d1d; }
+  .after    { background: #f0fdf4; border: 1px solid #86efac; color: #14532d; }
+  .new-only { background: #f0fdf4; border: 1px solid #86efac; color: #14532d; }
+  .unchanged { background: #f6f8fa; border: 1px solid #d0d7de; color: #555; opacity: 0.7; }
+
+  mark   { background: #fef08a; border-radius: 2px; padding: 0 1px; color: #713f12; font-style: normal; }
+  mark.g { background: #bbf7d0; color: #14532d; }
+
+  hr { border: none; border-top: 1px solid #e1e4e8; margin: 36px 0; }
+</style>
+</head>
+<body>
+
+<h1>Change Review — Fixes #1–5</h1>
+<p class="meta">explainer.html · index.html · 2026-04-26 / 2026-04-29</p>
+
+<!-- ── FIX 1 ── -->
+<div class="fix">
+  <div class="fix-header">
+    <span class="fix-num">#1</span>
+    <span class="fix-title">"Replicator" renamed to "Adaptive"</span>
+    <span class="fix-file">explainer.html › Scene 2 h2</span>
+  </div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">&lt;h2&gt;Scene 2: <mark>The Replicator Layer</mark>&lt;/h2&gt;</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">&lt;h2&gt;Scene 2: <mark class="g">The Adaptive Layer</mark>&lt;/h2&gt;</pre>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ── FIX 2 ── -->
+<div class="fix">
+  <div class="fix-header">
+    <span class="fix-num">#2</span>
+    <span class="fix-title">In-group solidarity given a formal home</span>
+    <span class="fix-file">explainer.html · 3 insertions</span>
+  </div>
+
+  <div class="sub-label">2a — Forward pointer at end of solidarity motivation paragraph</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">...they just relate.
+&lt;/p&gt;</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">...they just relate.
+<mark class="g">(This mechanism is formalized in Scene 3 below.)</mark>
+&lt;/p&gt;</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">2b — Motivation→math mapping note (after asymmetry callout)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before"><mark>[nothing — jumped straight to "Every Term Explained"]</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after"><mark class="g">Payscale insurance maps to β; ladder-pulling
+to γ; in-group solidarity to the network lift
+λ in Scene 3. The α term stands apart—it is
+the pull of merit, the one force working
+against the seniority equilibrium rather than
+sustaining it.</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">2c — New "Scene 3: The Solidarity Network" section (after Scene 2 block)</div>
+  <div class="change-label new-label" style="margin-bottom:6px;">New</div>
+  <pre class="new-only">Each agent is embedded in a social graph whose edges represent
+relationships—shared cohort, shared history, informal alliance.
+A higher-ranked neighbor exerts upward lift; the force is asymmetric,
+since those already surpassed offer nothing further. This is the
+formal rendering of in-group solidarity: advantage that flows along
+the lines people actually draw around themselves.
+
+  lift_i = (λ / N−1) · Σ_{j~i} max(0, r_j − r_i)
+
+Three graph topologies are available. Age-banded graphs pack edges
+within cohorts—the homophily case. Small-world graphs add sparse
+cross-cohort bridges. Random graphs serve as the null: uniform
+connectivity, no age structure.</pre>
+</div>
+
+<hr>
+
+<!-- ── FIX 3 ── -->
+<div class="fix">
+  <div class="fix-header">
+    <span class="fix-num">#3</span>
+    <span class="fix-title">γ citation corrected — Lazear 1989 primary, Lindbeck–Snower secondary</span>
+    <span class="fix-file">explainer.html · γ term + references</span>
+  </div>
+
+  <div class="sub-label">3a — γ term description (second paragraph)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">Economists call this <em>insider holdup</em>
+[<mark>Lindbeck & Snower 1988</mark>]: seniors withhold
+cooperation, context, and access, making
+the junior's contributions less legible to
+the org. The formula captures the magnitude
+of their leverage.</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">The tournament literature shows that large
+rank-prize spreads create incentives to impede
+rivals rather than outperform them [<mark class="g">Lazear 1989</mark>]
+—a senior threatened by a rising junior faces
+this incentive directly. Withholding cooperation,
+context, and access makes the junior's
+contributions less legible to the org without
+any overt act required. Economists label the
+structural leverage this creates <em>insider holdup</em>
+[<mark class="g">Lindbeck & Snower 1988</mark>]—though their original
+framing is the labor market, the within-firm
+mechanism is the same.</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">3b — New reference added between Lazear–Rosen 1981 and Lindbeck–Snower</div>
+  <div class="change-label new-label" style="margin-bottom:6px;">New</div>
+  <pre class="new-only">Lazear, E.P. (1989). Pay equality and industrial politics.
+<em>Journal of Political Economy</em>, 97(3), 561–580.</pre>
+</div>
+
+<hr>
+
+<!-- ── FIX 4 ── -->
+<div class="fix">
+  <div class="fix-header">
+    <span class="fix-num">#4</span>
+    <span class="fix-title">Landing page γ reframed — passive → adversarial</span>
+    <span class="fix-file">index.html · card + eq note + scenario 03</span>
+  </div>
+
+  <div class="sub-label">4a — "How it works" γ card</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">sym:  <mark>γ · experience</mark>
+name: <mark>Experience advantage</mark>
+desc: Reflects the weight of institutional
+knowledge. When the age ordering is disrupted,
+the cost of transferring accumulated context
+creates a gravitational pull toward restoring it.</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">sym:  <mark class="g">γ · holdup</mark>
+name: <mark class="g">Ladder-pulling</mark>
+desc: When a junior outranks a senior, the
+displaced senior can resist—withholding context,
+slowing introductions, declining to vouch. The
+threat rarely needs to be exercised; its
+existence is enough to make organizations
+reluctant to skip the line.</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">4b — Equation note H_i description</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">$H_i$ = <mark>experience-weighted pressure from age-order inversions</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">$H_i$ = <mark class="g">holdup pressure when juniors outrank seniors</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">4c — Scenario 03</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">title: <mark>Strong experience advantage</mark>
+
+desc:  The formal seniority norm (β) is weak,
+but institutional knowledge carries substantial
+weight (γ). Recovery after a disruption is
+sustained by the value of accumulated context
+rather than by explicit policy.
+
+watch: Recovery is slower and less uniform than
+Scenario 1, but the seniority ordering is still
+restored.
+
+url label: <mark>Strong+experience+advantage</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">title: <mark class="g">Ladder-pulling fortress</mark>
+
+desc:  No explicit seniority norm (β near zero)
+—no deferred pay structure, no fairness rule.
+What enforces the age order instead is γ:
+displaced seniors actively resist by withholding
+cooperation and context. The equilibrium sustains
+itself through behavior, not policy.
+
+watch: Recovery after the reshuffle is slower
+and lumpier than Scenario 1, but the age
+ordering still wins.
+
+url label: <mark class="g">Ladder-pulling+fortress</mark></pre>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ── FIX 5 ── -->
+<div class="fix">
+  <div class="fix-header">
+    <span class="fix-num">#5</span>
+    <span class="fix-title">Phase boundary card corrected — α/β ≈ 2, not α ≈ β</span>
+    <span class="fix-file">explainer.html › Parameter Regimes</span>
+  </div>
+
+  <div class="sub-label">5a — Condition</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">$\alpha \approx \beta$,&nbsp; $\gamma$ small</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">$\alpha/\beta \approx 2$,&nbsp; $\gamma$ small</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">5b — Description</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">Neither wins cleanly. After mutiny the cloud
+settles loosely; both $\tau$ values are moderate.
+The interesting middle.</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">The actual phase boundary, accounting for the
+scale asymmetry. Neither attractor dominates:
+after mutiny, both $\tau$ values fluctuate and
+the outcome is sensitive to noise.</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">Why it was wrong</div>
+  <pre class="unchanged">The asymmetry footnote already explains: (c_i − c̄) has σ ≈ 0.18
+while s_i spans [−1,1] with σ ≈ 0.58. So seniority still wins
+at α = β. The true phase boundary is α/β ≈ 2 (per the Key
+Ratio section). The card contradicted the explainer's own math.</pre>
+</div>
+
+<hr>
+
+<!-- ── VOCAB NOTE ── -->
+<div class="fix">
+  <div class="fix-header">
+    <span class="fix-num">vocab</span>
+    <span class="fix-title">Seniority vocabulary note — "How it works" section</span>
+    <span class="fix-file">index.html · after variable definitions</span>
+  </div>
+
+  <div class="sub-label">Inserted between the variable definitions paragraph and "Three forces act…"</div>
+  <div class="change-label new-label" style="margin-bottom:6px;">New</div>
+  <pre class="new-only" style="font-size:13px; line-height:1.7; padding:14px 18px; background:#f6f8fa; border:1px solid #d0d7de; border-radius:6px; color:#1a1a2e;">
+<strong>On the word seniority.</strong> Many readers will reach for <em>seniority</em> to
+name what this simulation models. We use <em>rank</em> for hierarchical position
+and <em>age</em> for tenure, keeping the two as separate variables. <em>Seniority</em>
+blurs them—a senior person both has more age and typically holds higher
+rank—and the model is precisely about how the first drives the second.
+Conflating them makes the mechanism invisible.</pre>
+</div>
+
+</body>
+</html>
