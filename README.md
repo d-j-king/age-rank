@@ -34,7 +34,7 @@ Each scenario pre-loads the simulation and fires a mutiny after 1 second.
 
 ## Running locally
 
-Double-click `index.html`. No install, no server, no build step.
+Double-click `index.html`. No install required.
 
 ## Theory
 
