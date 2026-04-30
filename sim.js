@@ -1,6 +1,6 @@
 // ============================================================
 // Seniority Dynamics — sim.js
-// URL params: alpha, beta, gamma, sigma, speed, n, scene, mutiny, label
+// URL params: alpha, beta, gamma, sigma, speed, n, scene, mutiny, label, lambda, rho
 // Euler-Maruyama integration of the rank SDE:
 //   drᵢ = [α(cᵢ−c̄) − β(rᵢ−sᵢ) − γHᵢ] dt + σ dWᵢ
 // ============================================================
@@ -15,12 +15,10 @@ let mutinyFlashKind = 'random';  // 'random' → red, 'merit' → amber
 let pageLabel = '';
 const HISTORY_LEN = 500;
 
-// Scene 3 cohort state — updated each step, read by renderer
-let cohortStats = {
-  means:  [0, 0, 0, 0],
-  maxes:  [0, 0, 0, 0],
-  active: [false, false, false, false],
-};
+// Scene 3 social graph state
+let graphAdj       = null;  // N×N Float32Array — symmetric adjacency
+let graphEdges     = [];    // [[i, j], ...] for rendering
+let currentGraphType = 'age';
 
 // Layout (set in setup / updateLayout)
 let scatterX, scatterY, scatterW, scatterH;
@@ -57,7 +55,7 @@ function applyUrlParams() {
   if (p.has('speed')) set('speed-slider', 'val-speed', p.get('speed'), v => v.toFixed(2) + '×');
   if (p.has('n'))     set('n-slider',     'val-n',     p.get('n'),     v => String(Math.round(v)));
   if (p.has('lambda')) set('lambda-slider', 'val-lambda', p.get('lambda'), v => v.toFixed(2));
-  if (p.has('eta'))    set('eta-slider',    'val-eta',    p.get('eta'),    v => v.toFixed(2));
+  if (p.has('rho'))    set('rho-slider',    'val-rho',    p.get('rho'),    v => v.toFixed(2));
   if (p.has('scene')) setScene(parseInt(p.get('scene')));
   if (p.has('label')) pageLabel = p.get('label');
   if (p.has('mutiny')) setTimeout(() => reshuffleMutiny(), 1200);
@@ -82,7 +80,6 @@ function draw() {
 
     document.getElementById('stat-rt').textContent = tauRT.toFixed(3);
     document.getElementById('stat-rc').textContent = tauRC.toFixed(3);
-    if (currentScene === 3) updateCohortBarsDOM();
   }
 
   drawScatter();
@@ -158,24 +155,66 @@ function drawCompetenceLegend(x, y, w, h) {
   text('high', x + w,     y + h + 2);
 }
 
-// Push cohort state to the sidebar DOM bars (scene 3 only).
-function updateCohortBarsDOM() {
-  const COHORT_COLS = ['rgb(0,200,255)','rgb(80,220,80)','rgb(255,175,0)','rgb(180,80,255)'];
-  const rows = document.querySelectorAll('#cohort-bars .cohort-row');
-  rows.forEach((row, g) => {
-    const active = cohortStats.active[g];
-    const meanPct = Math.max(0, Math.min(1, (cohortStats.means[g] + 1) / 2));
-    const maxPct  = Math.max(0, Math.min(1, (cohortStats.maxes[g] + 1) / 2));
-    const fill = row.querySelector('.cohort-fill');
-    const tick = row.querySelector('.cohort-tick');
-    const label = row.querySelector('.cohort-label');
-    fill.style.width = (meanPct * 100) + '%';
-    fill.style.backgroundColor = COHORT_COLS[g];
-    fill.style.opacity = active ? '0.95' : '0.4';
-    tick.style.left = 'calc(' + (maxPct * 100) + '% - 1px)';
-    tick.style.opacity = active ? '0.9' : '0.35';
-    label.style.color = active ? COHORT_COLS[g] : '#6b7380';
+// ============================================================
+// Social graph (Scene 3)
+// ============================================================
+
+function setGraphType(type) {
+  currentGraphType = type;
+  const idMap = { age: 'btn-graph-age', smallworld: 'btn-graph-smallworld', random: 'btn-graph-random' };
+  Object.entries(idMap).forEach(([t, id]) => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.toggle('active', t === type);
   });
+  generateGraph();
+}
+
+function generateGraph() {
+  const N = agents.length;
+  graphAdj   = Array.from({length: N}, () => new Float32Array(N));
+  graphEdges = [];
+  if      (currentGraphType === 'age')        buildAgeBandedGraph(N);
+  else if (currentGraphType === 'smallworld') buildSmallWorldGraph(N);
+  else                                        buildRandomGraph(N);
+}
+
+function addEdge(i, j) {
+  if (graphAdj[i][j] > 0) return;
+  graphAdj[i][j] = 1;
+  graphAdj[j][i] = 1;
+  graphEdges.push([i, j]);
+}
+
+function buildAgeBandedGraph(N) {
+  const P_IN = 0.40, P_OUT = 0.04;
+  for (let i = 0; i < N; i++)
+    for (let j = i + 1; j < N; j++)
+      if (random() < (agents[i].cohort === agents[j].cohort ? P_IN : P_OUT))
+        addEdge(i, j);
+}
+
+function buildSmallWorldGraph(N) {
+  // Age-banded skeleton + random cross-cohort bridges
+  buildAgeBandedGraph(N);
+  const nBridges = Math.max(4, floor(N * 0.30));
+  let added = 0, attempts = 0;
+  while (added < nBridges && attempts < nBridges * 20) {
+    const i = floor(random(N));
+    const j = floor(random(N));
+    if (i !== j && agents[i].cohort !== agents[j].cohort && graphAdj[i][j] === 0) {
+      addEdge(i, j);
+      added++;
+    }
+    attempts++;
+  }
+}
+
+function buildRandomGraph(N) {
+  const P = 0.09;
+  for (let i = 0; i < N; i++)
+    for (let j = i + 1; j < N; j++)
+      if (random() < P)
+        addEdge(i, j);
 }
 
 // ============================================================
@@ -210,6 +249,9 @@ function initAgents(opts = {}) {
   }
   history = [];
   mutinyMarkers = [];
+  graphAdj   = null;
+  graphEdges = [];
+  if (currentScene === 3) generateGraph();
 }
 
 // ============================================================
@@ -233,45 +275,9 @@ function stepAgents() {
   const medianTau = byTau[floor(N / 2)].tau;
   const cMean = agents.reduce((s, a) => s + a.c, 0) / N;
 
-  // Scene 3: cohort solidarity + dynamic leadership beta
-  let betaActive = beta;
-  let cohortMaxes = null;
-  let lambdaS3 = 0;
-  if (currentScene === 3) {
-    lambdaS3 = getParam('lambda-slider');
-    const eta = getParam('eta-slider');
-
-    // Cohort aggregates: mean, max, and count-above-median (for "coalition active")
-    const sums   = new Float32Array(4);
-    const counts = new Int32Array(4);
-    const maxes  = [-Infinity, -Infinity, -Infinity, -Infinity];
-    const rSorted = agents.map(a => a.r).sort((x, y) => x - y);
-    const medianR = rSorted[floor(N / 2)];
-    const aboveMed = new Int32Array(4);
-    for (let i = 0; i < N; i++) {
-      const g = agents[i].cohort;
-      sums[g] += agents[i].r;
-      counts[g]++;
-      if (agents[i].r > maxes[g]) maxes[g] = agents[i].r;
-      if (agents[i].r > medianR) aboveMed[g]++;
-    }
-    cohortMaxes = maxes;
-    cohortStats.means  = Array.from(sums, (s, g) => counts[g] > 0 ? s / counts[g] : 0);
-    cohortStats.maxes  = maxes.map(m => m === -Infinity ? 0 : m);
-    cohortStats.active = Array.from(aboveMed, n => n >= 2);
-
-    // Leader = agent with highest current rank; their age percentile modulates beta
-    let leaderIdx = 0;
-    for (let i = 1; i < N; i++) {
-      if (agents[i].r > agents[leaderIdx].r) leaderIdx = i;
-    }
-    const leaderTauPctile = (sMap.get(agents[leaderIdx]) + 1) / 2;
-    // eta=0 → no modulation; eta=1 → oldest leader gives 1.5×beta, youngest 0.5×beta
-    betaActive = Math.max(0.05, beta * (1 + (leaderTauPctile - 0.5) * eta));
-
-    document.getElementById('stat-leader').textContent = leaderTauPctile.toFixed(2);
-    document.getElementById('stat-betaeff').textContent = betaActive.toFixed(3);
-  }
+  // Scene 3: social graph lift
+  const lambdaS3 = currentScene === 3 ? getParam('lambda-slider') : 0;
+  const rhoS3    = currentScene === 3 ? getParam('rho-slider')    : 0;
 
   const dr = new Float32Array(N);
   const dh = new Float32Array(N);
@@ -293,17 +299,26 @@ function stepAgents() {
     }
     holdup /= max(N - 1, 1);
 
-    // Asymmetric coalition lift: high-ranked peers pull allies UP (never down).
-    // max(0, ·) means a cohort's top dog drags laggards up in their wake,
-    // but no symmetric "pull to mean" dragging high-rankers down.
-    const cohortPull = (currentScene === 3 && cohortMaxes)
-      ? lambdaS3 * Math.max(0, cohortMaxes[a.cohort] - a.r) : 0;
+    // Social graph lift: each connected agent above you pulls you up.
+    // Perceived rank p = (1−ρ)·r + ρ·c blends positional rank with competence.
+    // At ρ=0: pure solidarity (rank-based). At ρ=1: pure recognition (competence-based).
+    let socialLift = 0;
+    if (currentScene === 3 && graphAdj) {
+      const pi = (1 - rhoS3) * a.r + rhoS3 * a.c;
+      for (let j = 0; j < N; j++) {
+        if (graphAdj[i][j] > 0) {
+          const pj = (1 - rhoS3) * agents[j].r + rhoS3 * agents[j].c;
+          socialLift += Math.max(0, pj - pi);
+        }
+      }
+      socialLift = lambdaS3 * socialLift / Math.max(N - 1, 1);
+    }
 
     dr[i] = (
       alpha      * (a.c - cMean)
-      - betaActive * (a.r - si)
-      - gammaEff   * holdup
-      + cohortPull
+      - beta     * (a.r - si)
+      - gammaEff * holdup
+      + socialLift
     ) * dt + sigma * sqrt(dt) * randomGaussian();
 
     // Replicator dynamics (scene 2 only)
@@ -393,7 +408,7 @@ function drawScatter() {
   textStyle(BOLD);
   const sceneTag = currentScene === 1 ? 'Scene 1: Kinematic SDE'
                  : currentScene === 2 ? 'Scene 2: Replicator'
-                 : 'Scene 3: Coalitions';
+                 : 'Scene 3: Social Network';
   const titleStr = pageLabel ? `${pageLabel}` : sceneTag;
   text(titleStr, sx + 10, sy + 9);
   textStyle(NORMAL);
@@ -405,14 +420,22 @@ function drawScatter() {
 
 
   // Axis labels
-  textAlign(CENTER, CENTER);
+  noStroke();
   textSize(10);
-  fill(99, 119, 139);
-  text('← young · age · old →', sx + sw / 2, sy + sh + 16);
+  fill(130, 148, 165);
+  textAlign(CENTER, TOP);
+  text('age', sx + sw / 2, sy + sh + 14);
+  fill(100, 115, 132);
+  textAlign(LEFT, TOP);
+  text('young', sx + 2, sy + sh + 14);
+  textAlign(RIGHT, TOP);
+  text('old', sx + sw - 2, sy + sh + 14);
   push();
   translate(sx - 26, sy + sh / 2);
   rotate(-HALF_PI);
-  text('rank ↑', 0, 0);
+  textAlign(CENTER, CENTER);
+  fill(130, 148, 165);
+  text('rank →', 0, 0);
   pop();
 
   // Particles
@@ -420,19 +443,23 @@ function drawScatter() {
   const tP = tauPctiles();
   const cP = compPctiles();
 
-  // Cohort rings (scene 3) — bright when that cohort has an active coalition
-  // (≥2 members above median rank), faint otherwise.
-  if (currentScene === 3) {
-    const COHORT_COLS = [[0,200,255],[80,220,80],[255,175,0],[180,80,255]];
+  // Social graph edges (scene 3). Alpha uses perceived rank gap:
+  // invisible at equilibrium when ρ=0; reveals the competence network at high ρ.
+  if (currentScene === 3 && graphEdges.length > 0) {
+    const rhoEdge = getParam('rho-slider');
     noFill();
-    for (let i = 0; i < agents.length; i++) {
-      const col = COHORT_COLS[agents[i].cohort];
-      const active = cohortStats.active[agents[i].cohort];
-      stroke(col[0], col[1], col[2], active ? 200 : 45);
-      strokeWeight(active ? 2.3 : 1.0);
-      const px = sx + tP[i] * sw;
-      const py = sy + (1 - rP[i]) * sh;
-      ellipse(px, py, 22, 22);
+    strokeWeight(1);
+    for (const [ei, ej] of graphEdges) {
+      const pi = (1 - rhoEdge) * agents[ei].r + rhoEdge * agents[ei].c;
+      const pj = (1 - rhoEdge) * agents[ej].r + rhoEdge * agents[ej].c;
+      const edgeAlpha = Math.floor((pj - pi) * (pj - pi) * 130);
+      if (edgeAlpha < 2) continue;
+      const px1 = sx + tP[ei] * sw;
+      const py1 = sy + (1 - rP[ei]) * sh;
+      const px2 = sx + tP[ej] * sw;
+      const py2 = sy + (1 - rP[ej]) * sh;
+      stroke(100, 155, 230, edgeAlpha);
+      line(px1, py1, px2, py2);
     }
   }
 
@@ -459,30 +486,6 @@ function drawScatter() {
     ellipse(px, py, 13, 13);
   }
 
-  // Leader highlight (scene 3)
-  if (currentScene === 3) {
-    // Leader: highest rank percentile
-    let leaderI = 0;
-    for (let i = 1; i < agents.length; i++) {
-      if (rP[i] > rP[leaderI]) leaderI = i;
-    }
-    const lpx = sx + tP[leaderI] * sw;
-    const lpy = sy + (1 - rP[leaderI]) * sh;
-    noFill();
-    stroke(255, 255, 255, 210);
-    strokeWeight(2.5);
-    ellipse(lpx, lpy, 25, 25);
-    // Star with dark halo for legibility against bright cohort rings
-    noStroke();
-    textAlign(CENTER, BOTTOM);
-    textSize(13);
-    fill(15, 20, 28, 230);
-    text('★', lpx, lpy - 9);
-    textSize(11);
-    fill(255, 236, 170, 240);
-    text('★', lpx, lpy - 10);
-
-  }
 
   // Mutiny flash overlay — red for random, amber for merit
   if (mutinyFlash > 0) {
@@ -578,14 +581,14 @@ function drawTimeSeries() {
 
   // Time axis hint + τ primer
   textAlign(LEFT, TOP);
-  textSize(9);
-  fill(72, 79, 88);
-  text('past', tx + 4, ty + th - 12);
+  textSize(10);
+  fill(105, 118, 132);
+  text('past', tx + 4, ty + th - 13);
   textAlign(RIGHT, TOP);
-  text('now', tx + tw - 22, ty + th - 12);
+  text('now', tx + tw - 22, ty + th - 13);
   textAlign(CENTER, TOP);
-  fill(99, 119, 139);
-  text('τ = 1 perfect order · 0 random · −1 inverted', tx + tw / 2, ty + th - 12);
+  fill(140, 155, 170);
+  text('τ = 1 perfect order · 0 random · −1 inverted', tx + tw / 2, ty + th - 13);
 
   // Current-value labels at right edge of lines
   if (n > 0) {
@@ -618,11 +621,10 @@ function setScene(n) {
   if (n === 2) {
     agents.forEach(a => { a.hoard = 0.2; });
   }
+  if (n === 3 && !graphAdj) generateGraph();
   const s3 = n === 3;
   document.getElementById('scene3-sliders').style.display = s3 ? 'flex' : 'none';
-  document.getElementById('stat-leader-row').style.display = s3 ? 'flex' : 'none';
-  document.getElementById('stat-betaeff-row').style.display = s3 ? 'flex' : 'none';
-  document.getElementById('coalitions-panel').style.display = s3 ? 'block' : 'none';
+  document.getElementById('graph-panel').style.display = s3 ? 'block' : 'none';
 }
 
 function togglePause() {

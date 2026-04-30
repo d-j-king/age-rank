@@ -56,7 +56,7 @@
 <body>
 
 <h1>Change Review — Fixes #1–5</h1>
-<p class="meta">explainer.html · index.html · 2026-04-26 / 2026-04-29</p>
+<p class="meta">explainer.html · index.html · 2026-04-26 / 2026-04-29 · vocabulary purge 2026-04-29</p>
 
 <!-- ── FIX 1 ── -->
 <div class="fix">
@@ -329,6 +329,356 @@ and <em>age</em> for tenure, keeping the two as separate variables. <em>Seniorit
 blurs them—a senior person both has more age and typically holds higher
 rank—and the model is precisely about how the first drives the second.
 Conflating them makes the mechanism invisible.</pre>
+</div>
+
+
+<hr>
+
+<!-- ── VOCAB PURGE A ── -->
+<div class="fix">
+  <div class="fix-header">
+    <span class="fix-num">purge·A</span>
+    <span class="fix-title">"seniority" removed everywhere after the vocab callout</span>
+    <span class="fix-file">index.html · explainer.html · ~18 instances</span>
+  </div>
+
+  <div class="sub-label">A1 — Intro paragraph (identical paragraph in both files)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">Together they can sustain what looks like
+a strong equilibrium around the <mark>seniority
+ordering</mark>. … different organizations settle
+at different points along the <mark>merit–seniority
+continuum</mark>. … the conditions under which
+the <mark>seniority equilibrium</mark> dominates,
+weakens, or gives way…</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">Together they can sustain what looks like
+a strong equilibrium around the <mark class="g">age-based
+ordering</mark>. … different organizations settle
+at different points along the <mark class="g">competence–age
+continuum</mark>. … the conditions under which
+the <mark class="g">age-based equilibrium</mark> dominates,
+weakens, or gives way…</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A2 — How it works dot description (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">rank perfectly matches age: <mark>seniority order
+is preserved.</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">rank perfectly <mark class="g">tracks age.</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A3 — How-it-works force card (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">sym:  <mark>β · seniority</mark>
+name: <mark>Seniority spring</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">sym:  <mark class="g">β · age</mark>
+name: <mark class="g">Age spring</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A4 — α/β key ratio paragraph (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">Below roughly 0.5, <mark>seniority prevails</mark>.</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">Below roughly 0.5, <mark class="g">age-based ordering prevails</mark>.</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A5 — Scenario 01 title &amp; desc (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">title: <mark>Seniority prevails</mark>
+desc: … The <mark>seniority spring</mark> is robust…
+url: label=<mark>Seniority+prevails</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">title: <mark class="g">Age-based ordering</mark>
+desc: … The <mark class="g">age spring</mark> is robust…
+url: label=<mark class="g">Age-based+ordering</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A6 — Scenario 03 desc (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">No explicit <mark>seniority norm</mark> (β near zero)</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">No explicit <mark class="g">age-ordering norm</mark> (β near zero)</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A7 — Scenario 04 desc &amp; watch (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before"><mark>Merit and seniority</mark> forces are nominally
+equal, yet <mark>seniority still prevails</mark>. The
+<mark>seniority target</mark> spans the full rank range…
+…higher than in the <mark>seniority-dominant case</mark>.</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after"><mark class="g">Competence and age</mark> forces are nominally
+equal, yet <mark class="g">age-based ordering still prevails</mark>.
+The <mark class="g">age target</mark> spans the full rank range…
+…higher than in the <mark class="g">age-dominant case</mark>.</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A8 — Theory card title (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">Why <mark>Seniority</mark> Persists—Theory &amp; Math</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">Why <mark class="g">Age-Based Ordering</mark> Persists—Theory &amp; Math</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A9 — Every Term Explained: β term name (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before"><mark>Seniority restoring force</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after"><mark class="g">Age restoring force</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A10 — β deferred-comp note (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">a bond that breaks if <mark>seniority is skipped</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">a bond that breaks if <mark class="g">the age order is skipped</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A11 — Variables table s_i row (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">$s_i$ | <mark>Seniority target</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">$s_i$ | <mark class="g">Age target</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A12 — Asymmetry note (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">the <mark>seniority target $s_i$</mark> is spread…
+…even at α = β, <mark>seniority</mark> exerts the
+stronger pull in practice.</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">the <mark class="g">age target $s_i$</mark> is spread…
+…even at α = β, <mark class="g">age</mark> exerts the
+stronger pull in practice.</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A13 — Parameter regime cards (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before"><mark>Seniority dominates</mark>  (card 1)
+<mark>Meritocracy</mark>           (card 2)</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after"><mark class="g">Age dominates</mark>         (card 1)
+<mark class="g">Competence wins</mark>       (card 2)</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A14 — Scene 2 hoarding paragraph (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before"><mark>seniority order</mark> is restored faster…
+top-down <mark>meritocratic</mark> reshuffles</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after"><mark class="g">age order</mark> is restored faster…
+top-down <mark class="g">competence-based</mark> reshuffles</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A15 — Scene 3 graph paragraph (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">reinforces the <mark>seniority equilibrium</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">reinforces the <mark class="g">age-based equilibrium</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">A16 — Key ratio paragraph (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">Below ~0.5: <mark>seniority wins</mark>. Above ~2.0: <mark>merit wins</mark>.</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">Below ~0.5: <mark class="g">age-based ordering wins</mark>. Above ~2.0: <mark class="g">competence wins</mark>.</pre>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ── VOCAB PURGE B ── -->
+<div class="fix">
+  <div class="fix-header">
+    <span class="fix-num">purge·B</span>
+    <span class="fix-title">"merit" → "competence" throughout</span>
+    <span class="fix-file">index.html · explainer.html · ~10 instances</span>
+  </div>
+
+  <div class="sub-label">B1 — Motivation paragraph (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">a <mark>merit-driven company</mark> to produce
+a hierarchy…</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">a <mark class="g">competence-driven organization</mark> to produce
+a hierarchy…</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">B2 — Core Idea closing (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">the regimes where <mark>merit</mark> can compete.</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">the regimes where <mark class="g">competence</mark> can compete.</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">B3 — SDE reading (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before"><mark>merit pull</mark> + seniority pull + ladder-pulling</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after"><mark class="g">competence pull</mark> + age pull + ladder-pulling</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">B4 — α mapping note (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">it is the pull of <mark>merit</mark>, the one force…</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">it is the pull of <mark class="g">competence</mark>, the one force…</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">B5 — α term name (explainer.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before"><mark>Meritocratic drift</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after"><mark class="g">Competence drift</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">B6 — How-it-works α card (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">sym:  <mark>α · merit</mark>
+name: <mark>Meritocratic drift</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">sym:  <mark class="g">α · competence</mark>
+name: <mark class="g">Competence drift</mark></pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">B7 — α/β ratio paragraph (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">Above roughly 2, <mark>merit-based ordering</mark> takes hold.</pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">Above roughly 2, <mark class="g">competence-based ordering</mark> takes hold.</pre>
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:18px;">B8 — Scenario 02 title &amp; URL (index.html)</div>
+  <div class="diff-row">
+    <div>
+      <div class="change-label before-label">Before</div>
+      <pre class="before">title: <mark>Merit-based ordering</mark>
+url: label=<mark>Merit-based+ordering</mark></pre>
+    </div>
+    <div>
+      <div class="change-label after-label">After</div>
+      <pre class="after">title: <mark class="g">Competence-based ordering</mark>
+url: label=<mark class="g">Competence-based+ordering</mark></pre>
+    </div>
+  </div>
 </div>
 
 </body>

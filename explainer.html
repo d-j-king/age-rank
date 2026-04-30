@@ -147,11 +147,11 @@
 <body>
 
 <h1>Age-Rank</h1>
-<p class="subtitle">Why age-based rank ordering persists: theory and model</p>
+<p class="subtitle">Why age-based rank within organizations persists: theory and model</p>
 
 <h2>Motivation</h2>
 <p>
-Within any age cohort, the variance in individual skill, judgment, and drive is large—often larger than the difference between age cohorts separated by a decade of experience. Therefore, one might expect a merit-driven company to produce a hierarchy that is substantially age-mixed. But this is rarely the case. In practice, most organizations are ordered by age far more strongly than would be predicted based on variance in skill. Something other than competence appears to be doing much of the work.
+Within any age cohort, the variance in individual skill, judgment, and drive is large—often larger than the difference between age cohorts separated by a decade of experience. Therefore, one might expect a competence-driven organization to produce a hierarchy that is substantially age-mixed. But this is rarely the case. In practice, most organizations are ordered by age far more strongly than would be predicted based on variance in skill. Something other than competence appears to be doing much of the work.
 </p>
 <p>
 Several mechanisms are at play here, including but not limited to the following.
@@ -163,24 +163,24 @@ Before enumerating them, it is worth flagging a more general pattern. Social sys
 <strong>In-group solidarity.</strong> Once a senior cohort exists, its members share an interest in preserving the current ordering, by vouching for one another, coordinating informally around who rises, etc. The ordering is self-reinforcing because the people with influence over the next round of promotions benefited from the previous round&#8217;s outcomes. Simply put, humans also feel a visceral comfort and kinship with those closer in age; they just relate. (This mechanism is formalized in Scene 3 below.)
 </p>
 <p>
-<strong>Payscale insurance.</strong> A payscale that rises with age is itself a structural insurance arrangement. Younger employees support it because it promises future upside; older employees support it because they are currently drawing on it. The result is a shared incentive to preserve the age-based ordering that does not require explicit coordination.
+<strong>Payscale insurance.</strong> A payscale that rises with age is itself a structural insurance arrangement. Younger employees support it because it promises future upside; older employees support it because they are currently drawing on it and will go on to earn the highest salary when they are latest in their careers—exactly the time when personal competitiveness and competence are mostly liable to decline. This means that if older workers manage to hang on even modestly past what a competence-justified tenure would have been, they reap outsized returns. The result is a shared incentive to preserve the age-based ordering that does not require explicit coordination.
 </p>
 <p>
 <strong>Pulling up the ladder.</strong> Older employees accumulate institutional knowledge, relationships, and procedural access whose value depends on the incumbent&#8217;s cooperation. A senior who is bypassed by a rookie (or under threat of such) can reverse or arrest that rookie&#8217;s further ascent without direct sabotage (e.g., by withholding context, declining to make introductions, or being slow to respond). The threat does not need to be exercised to shape decisions; its availability is enough to make organizations reluctant to promote against the age ordering in the first place.
 </p>
 <p>
-Each of these forces on its own might produce only partial stability. Together they can sustain what looks like a strong equilibrium around the seniority ordering. That equilibrium is common and well-documented; other equilibria remain possible, and different organizations settle at different points along the merit&#8211;seniority continuum. The goal of this simulation is to represent each force as a separate term with its own parameter, so that the conditions under which the seniority equilibrium dominates, weakens, or gives way can be examined directly.
+Together, these non-mutually-exclusive forces can sustain what looks like a strong equilibrium around the age-based ordering. That equilibrium is common and well-documented; other equilibria remain possible, and different organizations settle at different points along the competence&#8211;age continuum. The goal of this simulation is to represent each force as a separate term with its own parameter, so that the conditions under which the age-based equilibrium dominates, weakens, or gives way can be examined directly.
 </p>
 
 <h2>The Core Idea</h2>
 <p>
-Each person in the simulation has a fixed <strong>age</strong> (read loosely as years of relevant experience) and a fixed <strong>competence</strong> (how good they are). Their <strong>rank</strong> evolves over time, pulled by three competing forces plus random noise. The question: which force wins?
+Each person in the simulation has a fixed <strong>age</strong> (read loosely as years of relevant experience) and a fixed <strong>competence</strong> (how good they are). Their <strong>rank</strong> evolves over time, pulled by three competing forces plus random noise.
 </p>
 <p>
 <strong>A note on age vs. tenure.</strong> These are different quantities: a 45-year-old hired from a competitor firm has high age but zero tenure at the new employer. The purely firm-specific pressures (institutional leverage, the ladder-pulling mechanism) are carried by tenure; the other two mechanisms operate along both age and tenure, with a real sociopsychological component to the age dimension in particular, since people feel viscerally that something is strange or awkward when they observe stark exceptions to age-based ranking. For clarity, the simulation collapses the two into a single time variable and calls it <em>age</em>, which readers can interpret loosely as biological age, years in the field, or time at the firm. A fuller model would split the two and weight them separately, without changing the qualitative story.
 </p>
 <p>
-In almost every real organization, the age-ordering force wins. The simulation lets you dial up each force independently to see why and to find the regimes where merit can compete.
+In almost every real organization, the age-ordering force wins. The simulation lets you dial up each force independently to see why and to find the regimes where competence can compete.
 </p>
 
 <h2>The Equation</h2>
@@ -189,13 +189,13 @@ In almost every real organization, the age-ordering force wins. The simulation l
   <div class="eq-sub">$$H_i = \tfrac{1}{N}\sum_{j}\max(0,\,a_j - a_i)\cdot\max(0,\,r_i - r_j)$$</div>
 </div>
 <p>
-Read it as: <em>the change in your rank each instant = merit pull + seniority pull + ladder-pulling + luck.</em>
+Read it as: <em>rank change each instant = ±competence pull &minus; age spring &minus; holdup drag ± luck.</em>
 </p>
 <p style="font-size:13px; color:#555; background:#f1efe8; border-left:3px solid #d8d3c4; padding:10px 14px; margin: 8px 0 16px;">
-A subtlety on the $\alpha$ vs. $\beta$ comparison: the competence signal $(c_i - \bar{c})$ has standard deviation on the order of $0.18$, while the seniority target $s_i$ is spread across $[-1, 1]$ with standard deviation closer to $0.58$. The two forces act on signals of quite different scales, so even at $\alpha = \beta$, seniority exerts the stronger pull in practice. The $\alpha/\beta$ ratio should be read with that asymmetry in mind.
+A subtlety on the $\alpha$ vs. $\beta$ comparison: the competence signal $(c_i - \bar{c})$ has standard deviation on the order of $0.18$, while the age target $s_i$ is spread across $[-1, 1]$ with standard deviation closer to $0.58$. The two forces act on signals of quite different scales, so even at $\alpha = \beta$, age exerts the stronger pull in practice. The $\alpha/\beta$ ratio should be read with that asymmetry in mind.
 </p>
 <p style="font-size:13px; color:#555; margin: 0 0 16px;">
-Payscale insurance maps to $\beta$; ladder-pulling to $\gamma$; in-group solidarity to the network lift $\lambda$ in Scene 3. The $\alpha$ term stands apart&#8212;it is the pull of merit, the one force working against the seniority equilibrium rather than sustaining it.
+Payscale insurance maps to $\beta$; ladder-pulling to $\gamma$; in-group solidarity to the network lift $\lambda$ in Scene 3. The $\alpha$ term stands apart&#8212;it is the pull of competence, the one force working against the age-based equilibrium rather than sustaining it.
 </p>
 
 <h2>Every Term Explained</h2>
@@ -203,7 +203,7 @@ Payscale insurance maps to $\beta$; ladder-pulling to $\gamma$; in-group solidar
 <div class="term-row">
   <div class="term-sym" style="color:#3b82f6">$\alpha(c_i - \bar{c})$</div>
   <div class="term-body">
-    <div class="term-name">Meritocratic drift <span class="tag tag-lazear">α slider</span></div>
+    <div class="term-name">Competence drift <span class="tag tag-lazear">α slider</span></div>
     <div class="term-desc">Pulls your rank up if you're above-average competence, down if below. α controls how much the org actually rewards ability. In most orgs, α is small: talent is noticed slowly and incompletely.</div>
   </div>
 </div>
@@ -211,10 +211,10 @@ Payscale insurance maps to $\beta$; ladder-pulling to $\gamma$; in-group solidar
 <div class="term-row">
   <div class="term-sym" style="color:#22c55e">$-\beta(r_i - s_i)$</div>
   <div class="term-body">
-    <div class="term-name">Seniority restoring force <span class="tag tag-lazear">β slider</span></div>
+    <div class="term-name">Age restoring force <span class="tag tag-lazear">β slider</span></div>
     <div class="term-desc">
       Pulls your rank back toward $s_i$, the rank your <em>age alone</em> predicts. Think of it as a spring: the further you've drifted from "your place in line," the harder it pulls you back.<br><br>
-      What three forces produce this &#8220;spring&#8221;? (1) <strong>Deferred compensation:</strong> firms underpay juniors and overpay seniors on purpose; the future overpayment is a bond that breaks if seniority is skipped <a class="cite" href="#ref-lazear79">Lazear 1979</a>. (2) <strong>Tournament prizes:</strong> the pay gap between ranks is the incentive for everyone below; inverting rank compresses the prize <a class="cite" href="#ref-lazear81">Lazear &amp; Rosen 1981</a>. (3) <strong>Fairness norms:</strong> everyone watching recalibrates their expectations when the line is jumped <a class="cite" href="#ref-akerlof">Akerlof &amp; Yellen 1990</a>.
+      What three forces produce this &#8220;spring&#8221;? (1) <strong>Deferred compensation:</strong> firms underpay juniors and overpay seniors on purpose; the future overpayment is a bond that breaks if the age order is skipped <a class="cite" href="#ref-lazear79">Lazear 1979</a>. (2) <strong>Tournament prizes:</strong> the pay gap between ranks is the incentive for everyone below; inverting rank compresses the prize <a class="cite" href="#ref-lazear81">Lazear &amp; Rosen 1981</a>. (3) <strong>Fairness norms:</strong> everyone watching recalibrates their expectations when the line is jumped <a class="cite" href="#ref-akerlof">Akerlof &amp; Yellen 1990</a>.
     </div>
   </div>
 </div>
@@ -234,7 +234,7 @@ Payscale insurance maps to $\beta$; ladder-pulling to $\gamma$; in-group solidar
   <div class="term-sym" style="color:#f59e0b">$\sigma\,dW_i$</div>
   <div class="term-body">
     <div class="term-name">Noise <span class="tag tag-noise">σ slider</span></div>
-    <div class="term-desc">Random shocks: politics, visibility, project luck, manager turnover. Think "a key project landed on your desk this quarter that made you look great or terrible." Not essential to the dynamics; set $\sigma \approx 0$ for clean motion.</div>
+    <div class="term-desc">Random shocks: politics, visibility, project luck, manager turnover. Not essential to the dynamics; set $\sigma \approx 0$ for clean motion.</div>
   </div>
 </div>
 
@@ -244,24 +244,24 @@ Payscale insurance maps to $\beta$; ladder-pulling to $\gamma$; in-group solidar
   <tr><td>$a_i$</td><td>Age</td><td>Fixed. Determines x-position on the scatter. Read as years of relevant experience; see the note above on age vs. tenure.</td></tr>
   <tr><td>$c_i$</td><td>Competence</td><td>Fixed. Shown as dot color (blue = low, red = high). Drawn from a distribution at start.</td></tr>
   <tr><td>$r_i$</td><td>Rank</td><td>The state variable; the only thing that moves. Determines y-position. This is what the SDE governs.</td></tr>
-  <tr><td>$s_i$</td><td>Seniority target</td><td>The rank $a_i$ <em>predicts</em> based on age order alone. The spring pulls $r_i$ toward $s_i$.</td></tr>
+  <tr><td>$s_i$</td><td>Age target</td><td>The rank $a_i$ <em>predicts</em> based on age order alone. The spring pulls $r_i$ toward $s_i$.</td></tr>
   <tr><td>$H_i$</td><td>Holdup force</td><td>Computed from the current positions of all other agents. High when junior $i$ is sitting above many seniors.</td></tr>
 </table>
 
 <h2>Parameter Regimes</h2>
 <div class="regime-grid">
   <div class="regime-card">
-    <div class="regime-card-title">Seniority dominates</div>
+    <div class="regime-card-title">Age dominates</div>
     <div class="regime-card-cond">$\alpha/\beta = 0.2$,&nbsp; $\gamma$ moderate</div>
     <div class="regime-card-desc">After mutiny, cloud snaps back to diagonal fast. Blue $\tau(\text{rank}, \text{age})$ recovers fully. The normal org.</div>
   </div>
   <div class="regime-card">
-    <div class="regime-card-title">Meritocracy</div>
+    <div class="regime-card-title">Competence wins</div>
     <div class="regime-card-cond">$\alpha/\beta = 6$,&nbsp; $\gamma \approx 0$</div>
     <div class="regime-card-desc">Dots sort by color (red up, blue down). Orange $\tau(\text{rank}, \text{comp})$ stays high. Age order is irrelevant.</div>
   </div>
   <div class="regime-card">
-    <div class="regime-card-title">Holdup fortress</div>
+    <div class="regime-card-title">Ladder-pulling</div>
     <div class="regime-card-cond">$\gamma = 2.0$,&nbsp; $\beta = 0.2$</div>
     <div class="regime-card-desc">β is weak, so recovery after mutiny is driven by holdup alone: slower and lumpier, but it still wins.</div>
   </div>
@@ -279,7 +279,7 @@ Payscale insurance maps to $\beta$; ladder-pulling to $\gamma$; in-group solidar
     <div>$$\frac{dh_i}{dt} = \varepsilon \cdot v_i \;-\; \delta \cdot h_i$$</div>
     <div style="color:#888; font-size:12px; margin-top:4px">$v_i$ = number of juniors currently outranking senior $i$</div>
   </div>
-  <p>When a mutiny strikes, violation counts spike → hoarding intensifies → holdup force strengthens → seniority order is restored faster → violations drop → hoarding decays. The equilibrium defends itself endogenously. This is why top-down meritocratic reshuffles tend to fail: they trigger the very behavior (knowledge-hoarding) that reverses them.</p>
+  <p>When a mutiny strikes, violation counts spike → hoarding intensifies → holdup force strengthens → age order is restored faster → violations drop → hoarding decays. The equilibrium defends itself endogenously. This is why top-down competence-based reshuffles tend to fail: they trigger the very behavior (knowledge-hoarding) that reverses them.</p>
 </div>
 
 <h2>Scene 3: The Solidarity Network</h2>
@@ -289,12 +289,12 @@ Payscale insurance maps to $\beta$; ladder-pulling to $\gamma$; in-group solidar
     <div>$$\text{lift}_i = \frac{\lambda}{N-1}\sum_{j \,\sim\, i} \max(0,\, p_j - p_i)$$</div>
     <div style="color:#888; font-size:12px; margin-top:4px">$p_k = (1-\rho)\,r_k + \rho\,c_k$ &nbsp;·&nbsp; $j \sim i$ = neighbor of $i$ &nbsp;·&nbsp; $\lambda$ = lift strength &nbsp;·&nbsp; $\rho$ = recognition weight (default 0)</div>
   </div>
-  <p>Three graph topologies are available. <em>Age-banded</em> graphs pack edges within cohorts&#8212;the homophily case, where people cluster with those close in age. <em>Small-world</em> graphs add sparse cross-cohort bridges, capturing the mentor or sponsor relationship that ties a junior to a distant senior. <em>Random</em> graphs serve as the null: uniform connectivity, no age structure. The age-banded topology reinforces the seniority equilibrium; cross-cohort bridges are the mechanism by which an individual can escape the ceiling of their cohort.</p>
+  <p>Three graph topologies are available. <em>Age-banded</em> graphs pack edges within cohorts&#8212;the homophily case, where people cluster with those close in age. <em>Small-world</em> graphs add sparse cross-cohort bridges, capturing the mentor or sponsor relationship that ties a junior to a distant senior. <em>Random</em> graphs serve as the null: uniform connectivity, no age structure. The age-banded topology reinforces the age-based equilibrium; cross-cohort bridges are the mechanism by which an individual can escape the ceiling of their cohort.</p>
 </div>
 
 <h2>The Key Ratio to Remember</h2>
 <p>
-  $\alpha/\beta$ is the single number that determines which attractor you're in. Below ~0.5: seniority wins. Above ~2.0: merit wins. In between: mixed, sensitive to perturbations. Most real organizations sit around 0.1–0.3.
+  $\alpha/\beta$ is the single number that determines which attractor you're in. Below ~0.5: age-based ordering wins. Above ~2.0: competence wins. In between: mixed, sensitive to perturbations. Most real organizations sit around 0.1–0.3.
 </p>
 
 <div class="ref-section">

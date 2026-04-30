@@ -270,7 +270,7 @@
 
 <div class="hero">
   <div class="hero-eyebrow">Psychology · Economics · Game Theory</div>
-  <h1>Why seniority in the workplace often regresses to age-based ranking (and why that is so sticky)</h1>
+  <h1>Why rank in the workplace often regresses to age-based ordering<br>(and why it's so sticky)</h1>
   <div class="hero-video">
     <video src="demo.mp4" autoplay loop muted playsinline></video>
   </div>
@@ -289,13 +289,13 @@
     <strong style="color:var(--text)">In-group solidarity.</strong> Once a senior cohort exists, its members share an interest in preserving the current ordering, by vouching for one another, coordinating informally around who rises, etc. The ordering is self-reinforcing because the people with influence over the next round of promotions benefited from the previous round's outcomes. Simply put, humans also feel a visceral comfort and kinship with those closer in age; they just relate.
   </p>
   <p style="color:var(--muted); margin-bottom:14px; font-size:15px; line-height:1.75;">
-    <strong style="color:var(--text)">Payscale insurance.</strong> A payscale that rises with age is itself a structural insurance arrangement. Younger employees support it because it promises future upside; older employees support it because they are currently drawing on it. The result is a shared incentive to preserve the age-based ordering that does not require explicit coordination.
+    <strong style="color:var(--text)">Payscale insurance.</strong> A payscale that rises with age is itself a structural insurance arrangement. Younger employees support it because it promises future upside; older employees support it because they are currently drawing on it and will go on to earn the highest salary when they are latest in their careers—exactly the time when personal competitiveness and competence are mostly liable to decline. This means that if older workers manage to hang on even modestly past what a competence-justified tenure would have been, they reap outsized returns. The result is a shared incentive to preserve the age-based ordering that does not require explicit coordination.
   </p>
   <p style="color:var(--muted); margin-bottom:18px; font-size:15px; line-height:1.75;">
     <strong style="color:var(--text)">Pulling up the ladder.</strong> Older employees accumulate institutional knowledge, relationships, and procedural access whose value depends on the incumbent's cooperation. A senior who is bypassed by a rookie (or under threat of such) can reverse or arrest that rookie's further ascent without direct sabotage (e.g., by withholding context, declining to make introductions, or being slow to respond). The threat does not need to be exercised to shape decisions; its availability is enough to make organizations reluctant to promote against the age ordering in the first place.
   </p>
   <p style="color:var(--muted); margin-bottom:18px; font-size:15px; line-height:1.75;">
-    Each of these forces on its own might produce only partial stability. Together they can sustain what looks like a strong equilibrium around the seniority ordering. That equilibrium is common and well-documented; other equilibria remain possible, and different organizations settle at different points along the merit–seniority continuum. The simulation below represents each force as a separate term with its own parameter, so that the conditions under which the seniority equilibrium dominates, weakens, or gives way can be examined directly.
+    Together, these non-mutually-exclusive forces can sustain what looks like a strong equilibrium around the age-based ordering. That equilibrium is common and well-documented; other equilibria remain possible, and different organizations settle at different points along the competence–age continuum. The simulation below represents each force as a separate term with its own parameter, so that the conditions under which the age-based equilibrium dominates, weakens, or gives way can be examined directly.
   </p>
   <p style="color:var(--muted); font-size:13px; line-height:1.7; padding:14px 16px; background:var(--surface); border:1px solid var(--border); border-radius:8px;">
     <strong style="color:var(--text)">A note on age vs. tenure.</strong> These are different quantities: a 45-year-old hired from a competitor firm has high age but zero tenure at the new employer. The purely firm-specific pressures (institutional leverage, the ladder-pulling mechanism) are carried by tenure; the other two mechanisms operate along both age and tenure, with a real sociopsychological component to the age dimension in particular, since people feel viscerally that something is strange or awkward when they observe stark exceptions to age-based ranking. For clarity, the simulation collapses the two into a single time variable and calls it <em>age</em>, which readers can interpret loosely as biological age, years in the field, or time at the firm.
@@ -308,7 +308,7 @@
     Each dot is an employee. Their horizontal position is fixed by <strong style="color:var(--text)">age</strong> (read loosely as years of relevant experience).
     Their vertical position is <strong style="color:var(--text)">rank</strong>, which evolves over time.
     Color shows <strong style="color:var(--text)">competence</strong> (blue = lower, red = higher).
-    When the dots align along the diagonal, rank perfectly matches age: seniority order is preserved.
+    When the dots align along the diagonal, rank perfectly tracks age.
   </p>
   <p style="font-size:13px; color:var(--muted); line-height:1.7; padding:12px 16px; background:var(--surface); border:1px solid var(--border); border-radius:8px; margin-bottom:20px;">
     <strong style="color:var(--text)">On the word <em>seniority</em>.</strong> Many readers will reach for <em>seniority</em> to describe parts of this model. To avoid confusion, I use <em>rank</em> for hierarchical position and <em>age</em> for tenure. The word <em>seniority</em> will not be used again.
@@ -318,13 +318,13 @@
   </p>
   <div class="how-grid">
     <div class="how-card">
-      <div class="how-sym" style="color:#58a6ff">α · merit</div>
-      <div class="how-name">Meritocratic drift</div>
+      <div class="how-sym" style="color:#58a6ff">α · competence</div>
+      <div class="how-name">Competence drift</div>
       <div class="how-desc">Pulls rank toward competence level. Recognizing and rewarding performance takes time, so this force is often modest.</div>
     </div>
     <div class="how-card">
-      <div class="how-sym" style="color:#3fb950">β · seniority</div>
-      <div class="how-name">Seniority spring</div>
+      <div class="how-sym" style="color:#3fb950">β · age</div>
+      <div class="how-name">Age spring</div>
       <div class="how-desc">Pulls rank back toward what age predicts. Captures deferred pay structures, fairness norms, and the stability of long-term employment contracts.</div>
     </div>
     <div class="how-card">
@@ -343,7 +343,7 @@
   </div>
   <p style="font-size:13px; color:var(--muted); margin-top:12px;">
     The key ratio is <strong style="color:var(--text)">$\alpha/\beta$</strong>.
-    Below roughly 0.5, seniority prevails. Above roughly 2, merit-based ordering takes hold. Most organizations fall between 0.1 and 0.3.
+    Below roughly 0.5, age-based ordering prevails. Above roughly 2, competence-based ordering takes hold. Most organizations fall between 0.1 and 0.3.
     <a href="explainer.html" target="_blank">Full theory →</a>
   </p>
 </div>
@@ -358,23 +358,23 @@
     <div class="scenario-card">
       <div class="scenario-num">01</div>
       <div class="scenario-body">
-        <div class="scenario-title">Seniority prevails</div>
+        <div class="scenario-title">Age-based ordering</div>
         <div class="scenario-params">$\alpha = 0.30 \;\cdot\; \beta = 1.50 \;\cdot\; \gamma = 0.50$</div>
-        <div class="scenario-desc">The baseline. A typical organization with strong age-based norms. The seniority spring is robust and competence plays a secondary role in determining rank.</div>
+        <div class="scenario-desc">The baseline. A typical organization with strong age-based norms. The age spring is robust and competence plays a secondary role in determining rank.</div>
         <div class="scenario-watch">Watch: after the reshuffle, the blue line drops then climbs back. The dot cloud returns to the diagonal.</div>
       </div>
-      <a class="launch-btn" href="sim.html?alpha=0.3&beta=1.5&gamma=0.5&sigma=0.06&speed=0.7&label=Seniority+prevails&mutiny=1" target="_blank">Launch ↗</a>
+      <a class="launch-btn" href="sim.html?alpha=0.3&beta=1.5&gamma=0.5&sigma=0.06&speed=0.7&label=Age-based+ordering&mutiny=1" target="_blank">Launch ↗</a>
     </div>
 
     <div class="scenario-card">
       <div class="scenario-num">02</div>
       <div class="scenario-body">
-        <div class="scenario-title">Merit-based ordering</div>
+        <div class="scenario-title">Competence-based ordering</div>
         <div class="scenario-params">$\alpha = 1.80 \;\cdot\; \beta = 0.30 \;\cdot\; \gamma \approx 0$</div>
-        <div class="scenario-desc">Competence is the primary driver of rank. The seniority spring is weak and age plays a smaller role. This regime requires strong and consistent performance feedback structures.</div>
+        <div class="scenario-desc">Competence is the primary driver of rank. The age spring is weak and age plays a smaller role. This regime requires strong and consistent performance feedback structures.</div>
         <div class="scenario-watch">Watch: dots gradually sort by color. Higher-competence dots (warmer colors) rise; lower-competence dots settle lower. The orange line stays elevated.</div>
       </div>
-      <a class="launch-btn" href="sim.html?alpha=1.8&beta=0.3&gamma=0.05&sigma=0.06&speed=0.7&label=Merit-based+ordering" target="_blank">Launch ↗</a>
+      <a class="launch-btn" href="sim.html?alpha=1.8&beta=0.3&gamma=0.05&sigma=0.06&speed=0.7&label=Competence-based+ordering" target="_blank">Launch ↗</a>
     </div>
 
     <div class="scenario-card">
@@ -382,7 +382,7 @@
       <div class="scenario-body">
         <div class="scenario-title">Pure ladder-pulling</div>
         <div class="scenario-params">$\alpha = 0.20 \;\cdot\; \beta = 0.20 \;\cdot\; \gamma = 2.0$</div>
-        <div class="scenario-desc">No explicit seniority norm ($\beta$ near zero)—no deferred pay structure, no fairness rule. What enforces the age order instead is $\gamma$: displaced seniors actively resist by withholding cooperation and context. The equilibrium sustains itself through behavior, not policy.</div>
+        <div class="scenario-desc">No explicit age-ordering norm ($\beta$ near zero)—no deferred pay structure, no fairness rule. What enforces the age order instead is $\gamma$: displaced seniors actively resist by withholding cooperation and context. The equilibrium sustains itself through behavior, not policy.</div>
         <div class="scenario-watch">Watch: recovery after the reshuffle is slower and lumpier than Scenario 1, but the age ordering still wins.</div>
       </div>
       <a class="launch-btn" href="sim.html?alpha=0.2&beta=0.2&gamma=2.0&sigma=0.04&speed=0.5&label=Pure+ladder-pulling&mutiny=1" target="_blank">Launch ↗</a>
@@ -393,8 +393,8 @@
       <div class="scenario-body">
         <div class="scenario-title">Competing forces</div>
         <div class="scenario-params">$\alpha = 1.0 \;\cdot\; \beta = 1.0 \;\cdot\; \gamma = 0.20$</div>
-        <div class="scenario-desc">Merit and seniority forces are nominally equal, yet seniority still prevails. The seniority target spans the full rank range while competence variation is narrower, so the structural weight of age wins even at $\alpha = \beta$. Recovery is slower and noisier than Scenario 1, and individual dot trajectories are more varied.</div>
-        <div class="scenario-watch">Watch: after the reshuffle, $\tau(\text{rank}, \text{age})$ recovers, but more slowly and to a lower ceiling than Scenario 1. Competence plays a detectable but secondary role: dots don't cleanly sort by color, but the variance around the diagonal is visibly higher than in the seniority-dominant case.</div>
+        <div class="scenario-desc">Competence and age forces are nominally equal, yet age-based ordering still prevails. The age target spans the full rank range while competence variation is narrower, so the structural weight of age wins even at $\alpha = \beta$. Recovery is slower and noisier than Scenario 1, and individual dot trajectories are more varied.</div>
+        <div class="scenario-watch">Watch: after the reshuffle, $\tau(\text{rank}, \text{age})$ recovers, but more slowly and to a lower ceiling than Scenario 1. Competence plays a detectable but secondary role: dots don't cleanly sort by color, but the variance around the diagonal is visibly higher than in the age-dominant case.</div>
       </div>
       <a class="launch-btn" href="sim.html?alpha=1.0&beta=1.0&gamma=0.2&sigma=0.06&speed=0.7&label=Competing+forces&mutiny=1" target="_blank">Launch ↗</a>
     </div>
@@ -416,7 +416,7 @@
 <div class="section">
   <div class="section-label">Full theory</div>
   <a class="theory-card" href="explainer.html" target="_blank">
-    <div class="theory-card-title">Why Seniority Persists—Theory &amp; Math</div>
+    <div class="theory-card-title">Why Age-Based Ordering Persists—Theory &amp; Math</div>
     <div class="theory-card-desc">The mechanisms in plain language, every term in the SDE explained, parameter regimes mapped, and the adaptive hoarding (Scene 2) and solidarity network (Scene 3) covered in full. Includes all references.</div>
     <div class="theory-card-cta">Read the explainer →</div>
   </a>

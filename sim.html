@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seniority Dynamics</title>
+  <title>Age-Rank</title>
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -214,7 +214,7 @@
 <div id="sidebar">
 
   <div>
-    <div class="logo">Seniority Dynamics</div>
+    <div class="logo">Age-Rank</div>
     <div style="font-size:11px; color:#e2eaf0; font-weight:600; margin-top:4px; line-height:1.4;">
       Why workplace rank tracks age.
     </div>
@@ -290,7 +290,7 @@
     <div id="scene3-sliders" style="display:none; flex-direction:column; gap:11px; margin-top:6px; padding-top:8px; border-top:1px solid #21262d;">
       <div class="slider-item">
         <div class="slider-header">
-          <span class="slider-name">Cohort pull<span class="slider-sym">λ</span></span>
+          <span class="slider-name">Network lift<span class="slider-sym">λ</span></span>
           <span class="slider-val" id="val-lambda">0.80</span>
         </div>
         <input type="range" id="lambda-slider" min="0" max="2" value="0.8" step="0.05"
@@ -298,11 +298,11 @@
       </div>
       <div class="slider-item">
         <div class="slider-header">
-          <span class="slider-name">Leader effect<span class="slider-sym">η</span></span>
-          <span class="slider-val" id="val-eta">1.00</span>
+          <span class="slider-name">Recognition<span class="slider-sym">ρ</span></span>
+          <span class="slider-val" id="val-rho">0.00</span>
         </div>
-        <input type="range" id="eta-slider" min="0" max="2" value="1.0" step="0.05"
-          oninput="updateLabel('eta', this.value)">
+        <input type="range" id="rho-slider" min="0" max="1" value="0" step="0.05"
+          oninput="updateLabel('rho', this.value)">
       </div>
     </div>
   </div>
@@ -328,31 +328,16 @@
     </div>
   </div>
 
-  <div id="coalitions-panel" style="display:none;">
-    <div class="section-label">Coalitions</div>
-    <div style="font-size:10px; color:#b8c6d2; line-height:1.55; margin-bottom:8px;">
-      <div><b style="color:#e2eaf0">Bar</b> = cohort mean rank</div>
-      <div><b style="color:#e2eaf0">Tick</b> = cohort top member</div>
-      <div style="margin-top:5px;"><b style="color:#fde68a">Bright row</b> = active coalition<br><span style="color:#8b949e">(&ge;2 members above median)</span></div>
+  <div id="graph-panel" style="display:none;">
+    <div class="section-label">Network</div>
+    <div class="scene-row">
+      <button class="scene-btn active" id="btn-graph-age" onclick="setGraphType('age')">Age</button>
+      <button class="scene-btn" id="btn-graph-smallworld" onclick="setGraphType('smallworld')">Small-world</button>
+      <button class="scene-btn" id="btn-graph-random" onclick="setGraphType('random')">Random</button>
     </div>
-    <div class="stat-block" id="cohort-bars" style="padding:9px 10px;">
-      <div class="cohort-row" data-cohort="0">
-        <span class="cohort-label">gen 0</span>
-        <div class="cohort-track"><div class="cohort-fill"></div><div class="cohort-tick"></div></div>
-      </div>
-      <div class="cohort-row" data-cohort="1">
-        <span class="cohort-label">gen 1</span>
-        <div class="cohort-track"><div class="cohort-fill"></div><div class="cohort-tick"></div></div>
-      </div>
-      <div class="cohort-row" data-cohort="2">
-        <span class="cohort-label">gen 2</span>
-        <div class="cohort-track"><div class="cohort-fill"></div><div class="cohort-tick"></div></div>
-      </div>
-      <div class="cohort-row" data-cohort="3">
-        <span class="cohort-label">gen 3</span>
-        <div class="cohort-track"><div class="cohort-fill"></div><div class="cohort-tick"></div></div>
-      </div>
-    </div>
+    <button class="btn" style="margin-top:6px;" onclick="generateGraph()">
+      <span class="btn-icon">↺</span> Regenerate network
+    </button>
   </div>
 
   <div>
@@ -365,14 +350,6 @@
       <div class="stat-row">
         <span class="stat-label orange">τ(rank, competence)</span>
         <span class="stat-value orange" id="stat-rc">—</span>
-      </div>
-      <div class="stat-row" id="stat-leader-row" style="display:none">
-        <span class="stat-label" style="color:#a78bfa">leader τ%ile</span>
-        <span class="stat-value" style="color:#a78bfa" id="stat-leader">—</span>
-      </div>
-      <div class="stat-row" id="stat-betaeff-row" style="display:none">
-        <span class="stat-label" style="color:#fbbf24" title="β modulated by the current leader's age (Scene 3)">eff. β</span>
-        <span class="stat-value" style="color:#fbbf24" id="stat-betaeff">—</span>
       </div>
     </div>
     <div style="font-size:9.5px; color:#8b949e; margin-top:6px; line-height:1.5;">
@@ -387,7 +364,7 @@
       High α &rarr; merit competes.<br>
       High γ &rarr; seniors hold tight.<br>
       Scene 2 &rarr; hoarding adapts to threat.<br>
-      Scene 3 &rarr; cohorts lift their own.<br>
+      Scene 3 &rarr; network clusters lift members.<br>
       Hit ⚡ Mutiny to perturb the order.
     </div>
   </div>
